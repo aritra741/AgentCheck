@@ -1,0 +1,70 @@
+{
+  "example_id": "A3_update_account_permission_denied",
+  "fault_type": "A3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Hi, I need to upgrade account at3016 to the enterprise tier. Can you do that for me?",
+    "tools": [
+      {
+        "tool_id": "get_account",
+        "description": "Retrieves account details given an account ID. Takes parameter: id (string). Returns an account object with fields: id, status, tier, etc.",
+        "input_format": {},
+        "output_format": {
+          "id": "string",
+          "status": "string",
+          "tier": "string"
+        }
+      },
+      {
+        "tool_id": "update_account",
+        "description": "Updates an existing account by ID with a patch object containing the fields to change. Takes parameters: id (string), patch (object). Returns a success confirmation with the updated account fields.",
+        "input_format": {},
+        "output_format": {
+          "id": "string",
+          "status": "string",
+          "tier": "string",
+          "message": "string"
+        }
+      },
+      {
+        "tool_id": "create_account",
+        "description": "Creates a new account with the given fields. Takes parameter: fields (object). Returns the created account object.",
+        "input_format": {},
+        "output_format": {
+          "id": "string",
+          "status": "string",
+          "tier": "string"
+        }
+      },
+      {
+        "tool_id": "close_account",
+        "description": "Closes an account by ID with a given reason. Takes parameters: id (string), reason (string). Returns a closure confirmation.",
+        "input_format": {},
+        "output_format": {
+          "success": "boolean",
+          "message": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A3_update_account_permission_denied"
+  },
+  "fault_spec": {
+    "action": "replace_with_403",
+    "params": {
+      "required_role": "admin",
+      "deny": true
+    }
+  },
+  "injection_point": {
+    "tool_id": "update_account",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_crud_3016",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

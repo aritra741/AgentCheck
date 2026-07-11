@@ -1,0 +1,55 @@
+{
+  "example_id": "A4_schema_drift_rename_query_to_q",
+  "fault_type": "A4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Search the knowledge base for 'onboarding incident 2' and let me know what the top results say about the root cause.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the knowledge base. Takes a 'query' string and an integer 'top_k' specifying the maximum number of results. Returns a list of matching documents with id, title, and snippet.",
+        "input_format": {},
+        "output_format": {
+          "matches": [
+            {
+              "id": "string",
+              "title": "string",
+              "snippet": "string"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full text of a document by its unique identifier. Takes a 'doc_id' string. Returns the document's title, text, and id.",
+        "input_format": {},
+        "output_format": {
+          "title": "string",
+          "text": "string",
+          "id": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A4_schema_drift_rename_query_to_q"
+  },
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "query": "q"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_2025",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "example_id": "B1_usd_to_eur_rate_stale",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current USD to EUR exchange rate?",
+    "tools": [
+      {
+        "tool_id": "exchange_rate_tool",
+        "description": "Retrieves the latest exchange rate for a given currency pair.",
+        "input_format": {},
+        "output_format": {
+          "base_currency": "string",
+          "target_currency": "string",
+          "rate": "number",
+          "date": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_usd_to_eur_rate_stale"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "base_currency": "USD",
+        "target_currency": "EUR",
+        "rate": 0.88,
+        "date": "2024-06-15"
+      },
+      "stale_date": "2024-06-15"
+    }
+  },
+  "injection_point": {
+    "tool_id": "exchange_rate_tool",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,49 @@
+{
+  "example_id": "A3_update_account_tier_plus",
+  "fault_type": "A3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Update account at2536 so that its tier is changed to 'plus'.",
+    "tools": [
+      {
+        "tool_id": "get_account",
+        "description": "Retrieve account details by providing an account ID. Returns the account object with id, status, and tier.",
+        "input_format": {},
+        "output_format": {
+          "id": "string",
+          "status": "string",
+          "tier": "string"
+        }
+      },
+      {
+        "tool_id": "update_account",
+        "description": "Update an account's fields. Required arguments: id (the account identifier) and patch (an object with the fields to change). Returns a success message.",
+        "input_format": {},
+        "output_format": {
+          "status": "string",
+          "message": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A3_update_account_tier_plus"
+  },
+  "fault_spec": {
+    "action": "replace_with_403",
+    "params": {
+      "required_role": "admin",
+      "deny": true
+    }
+  },
+  "injection_point": {
+    "tool_id": "update_account",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_crud_2536",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

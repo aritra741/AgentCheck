@@ -1,0 +1,42 @@
+{
+  "example_id": "B1_outdated_package_version",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the latest stable version of the 'requests' library?",
+    "tools": [
+      {
+        "tool_id": "get_pypi_package_info",
+        "description": "Fetches the latest release information for a given Python package from the Python Package Index (PyPI).",
+        "input_format": {},
+        "output_format": {
+          "package": "string",
+          "latest_version": "string",
+          "release_date": "string",
+          "summary": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_outdated_package_version"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "package": "requests",
+        "latest_version": "2.25.1",
+        "release_date": "2021-03-15",
+        "summary": "Python HTTP for Humans."
+      },
+      "stale_date": "2021-03-15"
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_pypi_package_info",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

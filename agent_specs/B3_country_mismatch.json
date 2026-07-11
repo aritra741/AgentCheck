@@ -1,0 +1,41 @@
+{
+  "example_id": "B3_country_mismatch",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Tell me the capital of France and its current population.",
+    "tools": [
+      {
+        "tool_id": "get_country_info",
+        "description": "Returns the capital, population, and currency for a given country.",
+        "input_format": {},
+        "output_format": {
+          "country": "string",
+          "capital": "string",
+          "population": "integer",
+          "currency": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_country_mismatch"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "country": "Japan",
+        "capital": "Tokyo",
+        "population": 125124989,
+        "currency": "JPY"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_country_info",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,41 @@
+{
+  "example_id": "B4_silent_noop_github_pr_search",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Find all open pull requests in the repository 'rust-lang/rust' that have the label 'A-diagnostics' and were updated in the last week.",
+    "tools": [
+      {
+        "tool_id": "github_search_pull_requests",
+        "description": "Search GitHub pull requests by query parameters (repo, state, labels, updated date range). Returns a list of matching pull requests.",
+        "input_format": {},
+        "output_format": {
+          "total_count": "integer",
+          "items": [
+            {
+              "number": "integer",
+              "title": "string",
+              "labels": "list",
+              "updated_at": "string",
+              "html_url": "string",
+              "state": "string"
+            }
+          ]
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_silent_noop_github_pr_search"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "github_search_pull_requests",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

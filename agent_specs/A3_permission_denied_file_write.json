@@ -1,0 +1,55 @@
+{
+  "example_id": "A3_permission_denied_file_write",
+  "fault_type": "A3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please create a file called delta_train_3058.md in the /drafts directory and save the text 'entry-train-3058-294' inside it.",
+    "tools": [
+      {
+        "tool_id": "write_file",
+        "description": "Writes content to a file at the given path. Parameters: path (string) - the file path, content (string) - the text to write. Returns a success confirmation.",
+        "input_format": {},
+        "output_format": {
+          "success": "boolean",
+          "path": "string"
+        }
+      },
+      {
+        "tool_id": "read_file",
+        "description": "Reads the contents of a file at the given path. Parameters: path (string). Returns the file content as a string.",
+        "input_format": {},
+        "output_format": {
+          "content": "string"
+        }
+      },
+      {
+        "tool_id": "list_dir",
+        "description": "Lists files in a directory. Parameters: path (string). Returns an array of file names.",
+        "input_format": {},
+        "output_format": {
+          "files": "list"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A3_permission_denied_file_write"
+  },
+  "fault_spec": {
+    "action": "replace_with_403",
+    "params": {
+      "required_role": "admin",
+      "deny": false
+    }
+  },
+  "injection_point": {
+    "tool_id": "write_file",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_files_3058",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

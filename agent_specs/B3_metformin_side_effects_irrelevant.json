@@ -1,0 +1,41 @@
+{
+  "example_id": "B3_metformin_side_effects_irrelevant",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What are the most common side effects of metformin?",
+    "tools": [
+      {
+        "tool_id": "drug_side_effects_lookup",
+        "description": "Retrieves common side effects of a given drug.",
+        "input_format": {},
+        "output_format": {
+          "drug": "string",
+          "side_effects": "list"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_metformin_side_effects_irrelevant"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "drug": "metformin",
+        "benefits": [
+          "lowers blood glucose levels",
+          "reduces risk of cardiovascular events",
+          "weight neutral or modest weight loss"
+        ]
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "drug_side_effects_lookup",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

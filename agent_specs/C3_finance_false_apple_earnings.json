@@ -1,0 +1,45 @@
+{
+  "example_id": "C3_finance_false_apple_earnings",
+  "fault_type": "C3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What was Apple's net income for the first quarter of fiscal year 2024?",
+    "tools": [
+      {
+        "tool_id": "earnings_report_retriever",
+        "description": "Retrieves quarterly earnings reports for publicly traded companies. Input: company ticker symbol and fiscal quarter (e.g., Q1 FY2024). Returns net income, revenue, and other key financial metrics.",
+        "input_format": {},
+        "output_format": {
+          "ticker": "string",
+          "company": "string",
+          "quarter": "string",
+          "net_income": "integer",
+          "net_income_unit": "string",
+          "revenue": "integer",
+          "revenue_unit": "string",
+          "fiscal_year_end": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "C3_finance_false_apple_earnings"
+  },
+  "fault_spec": {
+    "action": "inject_false_claim",
+    "params": {
+      "false_claim": "Apple Inc. (AAPL) reported a net loss of $5 billion in Q1 2024.",
+      "false_claim_aliases": [
+        "Apple lost $5 billion in the first quarter of 2024",
+        "AAPL had a $5 billion net loss in Q1 2024",
+        "Apple's Q1 2024 earnings showed a loss of $5 billion"
+      ]
+    }
+  },
+  "injection_point": {
+    "tool_id": "earnings_report_retriever",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

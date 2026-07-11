@@ -1,0 +1,2 @@
+# Installs the AgentCheck package plus the API server dependencies.
+-r ../requirements.txt

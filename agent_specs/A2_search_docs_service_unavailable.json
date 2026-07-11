@@ -1,0 +1,54 @@
+{
+  "example_id": "A2_search_docs_service_unavailable",
+  "fault_type": "A2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Search the internal knowledge base for 'billing incident 8' and summarize the top results.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the document repository and returns a ranked list of document summaries matching the query. Takes a query string and a top_k integer.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "doc_id": "string",
+              "title": "string",
+              "snippet": "string"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full text of a document by its unique doc_id.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "title": "string",
+          "text": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A2_search_docs_service_unavailable"
+  },
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "SERVICE_UNAVAILABLE",
+      "error_message": "The search service is temporarily unavailable. Please try again later."
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_3017",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

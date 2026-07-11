@@ -1,0 +1,39 @@
+{
+  "example_id": "B4_empty_demographics_result",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current population of Nuuk, Greenland?",
+    "tools": [
+      {
+        "tool_id": "search_demographics",
+        "description": "Retrieves demographic data for a given location, including population, region, and year.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "name": "string",
+              "country": "string",
+              "population": "integer",
+              "year": "integer"
+            }
+          ],
+          "status": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_empty_demographics_result"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "search_demographics",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,42 @@
+{
+  "example_id": "B1_stock_price_stale",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current stock price of Apple Inc. (AAPL)?",
+    "tools": [
+      {
+        "tool_id": "get_stock_price",
+        "description": "Fetches the latest stock price for a given ticker symbol.",
+        "input_format": {},
+        "output_format": {
+          "ticker": "string",
+          "price": "number",
+          "currency": "string",
+          "timestamp": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_stock_price_stale"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "ticker": "AAPL",
+        "price": 165.45,
+        "currency": "USD",
+        "timestamp": "2024-10-15T09:00:00Z"
+      },
+      "stale_date": "2024-10-15"
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_stock_price",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

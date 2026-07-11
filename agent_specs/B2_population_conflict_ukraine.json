@@ -1,0 +1,53 @@
+{
+  "example_id": "B2_population_conflict_ukraine",
+  "fault_type": "B2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current population of Ukraine as of 2024?",
+    "tools": [
+      {
+        "tool_id": "un_population_data",
+        "description": "Queries the United Nations population database for any country and year.",
+        "input_format": {},
+        "output_format": {
+          "country": "string",
+          "year": "integer",
+          "population": "integer",
+          "unit": "string",
+          "source": "string",
+          "note": "string"
+        }
+      },
+      {
+        "tool_id": "ukraine_national_statistics",
+        "description": "Provides official population data from the State Statistics Service of Ukraine.",
+        "input_format": {},
+        "output_format": {
+          "country": "string",
+          "year": "integer",
+          "population": "integer",
+          "unit": "string",
+          "source": "string",
+          "note": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B2_population_conflict_ukraine"
+  },
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "population",
+      "tool_a_value": "38,500,000 (from un_population_data)",
+      "tool_b_value": "34,700,000 (from ukraine_national_statistics)"
+    }
+  },
+  "injection_point": {
+    "tool_id": "un_population_data",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

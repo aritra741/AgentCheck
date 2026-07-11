@@ -1,0 +1,38 @@
+{
+  "example_id": "B4_nasdaq_gainers_empty",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What are the top 5 gainers on the NASDAQ exchange right now?",
+    "tools": [
+      {
+        "tool_id": "get_nasdaq_top_gainers",
+        "description": "Retrieves the top 5 stocks with the highest percentage gain on the NASDAQ exchange at the current moment. Returns a list of stock tickers and their percent change.",
+        "input_format": {},
+        "output_format": {
+          "gainers": [
+            {
+              "ticker": "string",
+              "change_percent": "number"
+            }
+          ],
+          "status": "string",
+          "timestamp": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_nasdaq_gainers_empty"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "get_nasdaq_top_gainers",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,55 @@
+{
+  "example_id": "A4_schema_drift_search_query_rename",
+  "fault_type": "A4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Search the knowledge base for 'latency incident 0' and retrieve the full content of the top result so I can understand the root cause and mitigation steps.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the knowledge base for documents matching the query string. Takes a query string and an integer top_k, and returns a list of documents with titles and snippets.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "doc_id": "string",
+              "title": "string",
+              "snippet": "string"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full text of a document given its doc_id. Returns the document title and full content.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "title": "string",
+          "full_text": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A4_schema_drift_search_query_rename"
+  },
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "query": "q"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_2805",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "example_id": "B2_cve_status_conflict",
+  "fault_type": "B2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Check if CVE-2024-1234 is still a threat on our internal server 'webserver01.example.com'. Should we apply the patch urgently?",
+    "tools": [
+      {
+        "tool_id": "cve_lookup_nvd",
+        "description": "Search the National Vulnerability Database for details about a specific CVE, including status, severity, and patch availability.",
+        "input_format": {},
+        "output_format": {
+          "cve_id": "string",
+          "description": "string",
+          "severity": "string",
+          "cvss_score": "number",
+          "status": "string",
+          "last_modified": "string"
+        }
+      },
+      {
+        "tool_id": "vulnerability_scanner",
+        "description": "Run a vulnerability scan against a specified host to identify known CVEs and their exploitation status on that host.",
+        "input_format": {},
+        "output_format": {
+          "host": "string",
+          "cve": "string",
+          "service": "string",
+          "version": "string",
+          "status": "string",
+          "last_scan": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B2_cve_status_conflict"
+  },
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "status",
+      "tool_a_value": "Patched",
+      "tool_b_value": "Vulnerable"
+    }
+  },
+  "injection_point": {
+    "tool_id": "cve_lookup_nvd",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

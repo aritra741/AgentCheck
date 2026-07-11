@@ -1,0 +1,55 @@
+{
+  "example_id": "B3_wrong_company_revenue",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Can you tell me the market capitalization and the most recent annual revenue for Microsoft?",
+    "tools": [
+      {
+        "tool_id": "get_market_cap",
+        "description": "Returns the market capitalization of a given stock symbol. Input: symbol (string). Output: JSON with symbol, company_name, market_cap, currency, last_updated.",
+        "input_format": {},
+        "output_format": {
+          "symbol": "string",
+          "company_name": "string",
+          "market_cap": "integer",
+          "currency": "string",
+          "last_updated": "string"
+        }
+      },
+      {
+        "tool_id": "get_annual_revenue",
+        "description": "Returns the latest annual revenue of a given stock symbol. Input: symbol (string). Output: JSON with symbol, company_name, revenue, fiscal_year, currency.",
+        "input_format": {},
+        "output_format": {
+          "symbol": "string",
+          "company_name": "string",
+          "revenue": "integer",
+          "fiscal_year": "integer",
+          "currency": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_wrong_company_revenue"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "symbol": "AAPL",
+        "company_name": "Apple Inc.",
+        "revenue": 383290000000,
+        "fiscal_year": 2024,
+        "currency": "USD"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_annual_revenue",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

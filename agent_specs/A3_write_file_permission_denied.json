@@ -1,0 +1,54 @@
+{
+  "example_id": "A3_write_file_permission_denied",
+  "fault_type": "A3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please write the string 'entry-train-2806-637' to the file /exports/rollup_train_2806.md.",
+    "tools": [
+      {
+        "tool_id": "write_file",
+        "description": "Writes a string to a specified file path. Parameters: path (string, required) \u2013 the absolute path to the file; content (string, required) \u2013 the text to write. Returns an object indicating success or failure.",
+        "input_format": {},
+        "output_format": {
+          "status": "string"
+        }
+      },
+      {
+        "tool_id": "read_file",
+        "description": "Reads the contents of a file. Parameter: path (string, required). Returns an object with the file's content.",
+        "input_format": {},
+        "output_format": {
+          "content": "string"
+        }
+      },
+      {
+        "tool_id": "list_dir",
+        "description": "Lists the entries in a directory. Parameter: path (string, required). Returns an object with an array of file/directory names.",
+        "input_format": {},
+        "output_format": {
+          "entries": "list"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A3_write_file_permission_denied"
+  },
+  "fault_spec": {
+    "action": "replace_with_403",
+    "params": {
+      "required_role": "admin",
+      "deny": true
+    }
+  },
+  "injection_point": {
+    "tool_id": "write_file",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_files_2806",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

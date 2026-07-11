@@ -1,0 +1,40 @@
+{
+  "example_id": "B1_population_stale",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What's the current population of California, USA?",
+    "tools": [
+      {
+        "tool_id": "get_population",
+        "description": "Returns the latest population estimate for a specified location.",
+        "input_format": {},
+        "output_format": {
+          "location": "string",
+          "population": "integer",
+          "as_of": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_population_stale"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "location": "California",
+        "population": 37325000,
+        "as_of": "2014-07-01"
+      },
+      "stale_date": "2014-07-01"
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_population",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

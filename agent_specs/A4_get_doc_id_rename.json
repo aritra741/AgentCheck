@@ -1,0 +1,54 @@
+{
+  "example_id": "A4_get_doc_id_rename",
+  "fault_type": "A4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I found a reference to document 'rfc-tls-2024-07' in an incident report. Can you pull up its full content so I can read the details?",
+    "tools": [
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full text of a document from the internal knowledge base. Parameter: doc_id (string, required) \u2014 the unique identifier of the document. Returns an object with doc_id, title, and full text.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "title": "string",
+          "text": "string"
+        }
+      },
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the knowledge base for documents matching a query string. Parameters: query (string), top_k (integer, optional). Returns a list of matching documents with doc_id and title.",
+        "input_format": {},
+        "output_format": {
+          "matches": [
+            {
+              "doc_id": "string",
+              "title": "string"
+            }
+          ]
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A4_get_doc_id_rename"
+  },
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "doc_id": "id"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_doc",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "self_generated",
+    "source_id": "self_A4_get_doc_id_rename",
+    "adaptation_type": "reformatted_and_schema_mapped"
+  }
+}

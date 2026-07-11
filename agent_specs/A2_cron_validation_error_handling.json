@@ -1,0 +1,61 @@
+{
+  "example_id": "A2_cron_validation_error_handling",
+  "fault_type": "A2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I need to schedule a job that runs every day at midnight (00:00). Before I create it, please verify that the cron expression '0 0 * * *' is valid.",
+    "tools": [
+      {
+        "tool_id": "validate_cron",
+        "description": "Validates a given cron expression. Accepts a single 'cron' string parameter and returns a JSON object with 'valid' (boolean), 'components' (breakdown of each field), and 'description' (human-readable next execution).",
+        "input_format": {},
+        "output_format": {
+          "valid": "boolean",
+          "components": {
+            "minute": "string",
+            "hour": "string",
+            "day_of_month": "string",
+            "month": "string",
+            "day_of_week": "string"
+          },
+          "description": "string"
+        }
+      },
+      {
+        "tool_id": "create_job",
+        "description": "Creates a scheduled job. Requires 'name', 'cron', and 'command' parameters. Returns a confirmation with job ID and status.",
+        "input_format": {},
+        "output_format": {
+          "job_id": "string",
+          "status": "string"
+        }
+      },
+      {
+        "tool_id": "list_jobs",
+        "description": "Lists all currently scheduled jobs. No parameters required. Returns an array of job objects.",
+        "input_format": {},
+        "output_format": "a value like: [{\"name\": \"seed_job_train_1\", \"cron\": \"0 * * * *\", \"command\": \"seed_task\"}]"
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A2_cron_validation_error_handling"
+  },
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "INTERNAL_ERROR",
+      "error_message": "Validation service temporarily unavailable. Please try again later."
+    }
+  },
+  "injection_point": {
+    "tool_id": "validate_cron",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_scheduling_3371",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

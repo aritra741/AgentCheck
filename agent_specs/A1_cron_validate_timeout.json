@@ -1,0 +1,64 @@
+{
+  "example_id": "A1_cron_validate_timeout",
+  "fault_type": "A1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I need to schedule a new hourly report. Please first validate whether the cron expression '0 * * * *' is valid. If it is, go ahead and create a job named 'hourly_report' with the command 'generate_report.sh' using that schedule.",
+    "tools": [
+      {
+        "tool_id": "validate_cron",
+        "description": "Validates a cron expression. Accepts a 'cron' string and returns a JSON object with a boolean 'valid' field and, if valid, a 'next_run' ISO 8601 timestamp.",
+        "input_format": {},
+        "output_format": {
+          "valid": "boolean",
+          "next_run": "string"
+        }
+      },
+      {
+        "tool_id": "create_job",
+        "description": "Creates a new scheduled job. Requires 'name', 'cron', and 'command' strings. Returns the created job details including a unique 'job_id'.",
+        "input_format": {},
+        "output_format": {
+          "job_id": "string",
+          "name": "string",
+          "cron": "string",
+          "command": "string",
+          "status": "string"
+        }
+      },
+      {
+        "tool_id": "list_jobs",
+        "description": "Lists all existing scheduled jobs, returning an array of job objects with their 'name', 'cron', and 'command'.",
+        "input_format": {},
+        "output_format": {
+          "jobs": [
+            {
+              "command": "string",
+              "cron": "string",
+              "name": "string"
+            }
+          ]
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A1_cron_validate_timeout"
+  },
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 10000
+    }
+  },
+  "injection_point": {
+    "tool_id": "validate_cron",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_scheduling_0827",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

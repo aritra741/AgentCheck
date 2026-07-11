@@ -1,0 +1,48 @@
+{
+  "example_id": "A2_search_docs_server_error",
+  "fault_type": "A2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I need the documents related to latency incident 9. Please search the knowledge base and bring me the most relevant ones.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the internal knowledge base for documents matching the given query. Returns a list of document IDs and relevance scores.",
+        "input_format": {},
+        "output_format": {
+          "doc_ids": "list"
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full content of a document by its ID. Returns the document title and text.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "title": "string",
+          "text": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A2_search_docs_server_error"
+  },
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "500",
+      "error_message": "Internal server error: search index temporarily unavailable"
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "dev_retrieval_0281",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

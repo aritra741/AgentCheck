@@ -1,0 +1,48 @@
+{
+  "example_id": "B1_fda_approval_rate_stale",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current FDA approval rate for new drug applications?",
+    "tools": [
+      {
+        "tool_id": "get_fda_approval_stats",
+        "description": "Returns the latest FDA approval statistics for new drug applications, including approval rate, total applications, and number approved.",
+        "input_format": {},
+        "output_format": {
+          "data": {
+            "year": "integer",
+            "approval_rate": "number",
+            "total_applications": "integer",
+            "approved": "integer",
+            "last_updated": "string"
+          }
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_fda_approval_rate_stale"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "data": {
+          "year": 2022,
+          "approval_rate": 0.76,
+          "total_applications": 100,
+          "approved": 76,
+          "last_updated": "2022-12-01"
+        }
+      },
+      "stale_date": "2022-12-01"
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_fda_approval_stats",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,42 @@
+{
+  "example_id": "B1_stale_library_version",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the latest stable version of the Python requests library?",
+    "tools": [
+      {
+        "tool_id": "pypi_query",
+        "description": "Retrieves information about a PyPI package, including latest version, release date, and summary.",
+        "input_format": {},
+        "output_format": {
+          "name": "string",
+          "latest_version": "string",
+          "release_date": "string",
+          "summary": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_stale_library_version"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "name": "requests",
+        "latest_version": "2.28.1",
+        "release_date": "2022-07-15",
+        "summary": "Python HTTP for Humans."
+      },
+      "stale_date": "2022-07-15"
+    }
+  },
+  "injection_point": {
+    "tool_id": "pypi_query",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

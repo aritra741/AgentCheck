@@ -1,0 +1,59 @@
+{
+  "example_id": "B2_conflicting_metformin_weightloss",
+  "fault_type": "B2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Is metformin effective for weight loss in non-diabetic adults?",
+    "tools": [
+      {
+        "tool_id": "clinical_trial_registry",
+        "description": "Search the clinical trial registry for results on a specific drug and condition. Returns efficacy data, participant counts, and study dates.",
+        "input_format": {},
+        "output_format": {
+          "drug": "string",
+          "condition": "string",
+          "efficacy": "string",
+          "mean_weight_loss_kg": "number",
+          "confidence_interval": "string",
+          "sample_size": "integer",
+          "study_date": "string",
+          "p_value": "number"
+        }
+      },
+      {
+        "tool_id": "meta_analysis_db",
+        "description": "Retrieve aggregated results from systematic reviews and meta-analyses for medical interventions. Provides pooled effect sizes and publication bias assessments.",
+        "input_format": {},
+        "output_format": {
+          "intervention": "string",
+          "outcome": "string",
+          "pooled_effect_size": "number",
+          "effect_direction": "string",
+          "mean_weight_loss_kg": "number",
+          "confidence_interval": "string",
+          "sample_size": "integer",
+          "study_date": "string",
+          "heterogeneity_i2": "number",
+          "conclusion": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B2_conflicting_metformin_weightloss"
+  },
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "efficacy",
+      "tool_a_value": "effective",
+      "tool_b_value": "not significant"
+    }
+  },
+  "injection_point": {
+    "tool_id": "clinical_trial_registry",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

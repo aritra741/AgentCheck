@@ -1,0 +1,51 @@
+{
+  "example_id": "A2_search_docs_error",
+  "fault_type": "A2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please search the knowledge base for 'billing incident 4' and tell me what you find.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Search the document knowledge base by query string and return the top_k most relevant documents. Takes 'query' (string) and 'top_k' (integer). Returns a list of objects with 'doc_id', 'title', 'snippet', and 'score'.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "doc_id": "string",
+              "title": "string",
+              "snippet": "string",
+              "score": "number"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieve the full content of a document by its document ID. Takes 'doc_id' (string). Returns the document object with 'id', 'title', 'text'.",
+        "input_format": {},
+        "output_format": {}
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A2_search_docs_error"
+  },
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "SERVICE_UNAVAILABLE",
+      "error_message": "Search service temporarily down, please retry later."
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_2537",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

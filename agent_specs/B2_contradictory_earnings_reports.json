@@ -1,0 +1,49 @@
+{
+  "example_id": "B2_contradictory_earnings_reports",
+  "fault_type": "B2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What was Apple's total revenue for the first quarter of fiscal 2024?",
+    "tools": [
+      {
+        "tool_id": "alphavantage_earnings",
+        "description": "Returns quarterly earnings and revenue data for public companies using the Alpha Vantage API. Accepts a ticker symbol and a fiscal period (e.g., '2024Q1').",
+        "input_format": {},
+        "output_format": {
+          "symbol": "string",
+          "fiscal_period": "string",
+          "total_revenue": "string",
+          "currency": "string"
+        }
+      },
+      {
+        "tool_id": "reuters_financials",
+        "description": "Retrieves financial statement data from Reuters, including revenue, net income, and EPS. Input requires a company ticker and a fiscal quarter string (e.g., '2024-Q1').",
+        "input_format": {},
+        "output_format": {
+          "symbol": "string",
+          "fiscal_quarter": "string",
+          "reported_revenue": "string",
+          "currency": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B2_contradictory_earnings_reports"
+  },
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "revenue",
+      "tool_a_value": "$119.58 billion",
+      "tool_b_value": "$99.5 billion"
+    }
+  },
+  "injection_point": {
+    "tool_id": "alphavantage_earnings",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

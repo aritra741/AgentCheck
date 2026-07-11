@@ -1,0 +1,63 @@
+{
+  "example_id": "B4_empty_clinical_trials",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Find me the latest clinical trial results for remdesivir in the treatment of COVID-19. I need to know the current status of these trials.",
+    "tools": [
+      {
+        "tool_id": "search_clinical_trials",
+        "description": "Search the ClinicalTrials.gov database for registered trials matching a given query. Returns a list of trial records with status, results, and enrollment details.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "nct_id": "string",
+              "title": "string",
+              "status": "string",
+              "phase": "string",
+              "enrollment": "integer",
+              "last_update_posted": "string",
+              "primary_outcome": "string",
+              "adverse_events": "string"
+            }
+          ],
+          "total_count": "integer",
+          "status": "string"
+        }
+      },
+      {
+        "tool_id": "search_pubmed",
+        "description": "Search the PubMed database of biomedical literature for articles matching a query. Returns a list of abstracts and metadata.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "pmid": "string",
+              "title": "string",
+              "authors": "string",
+              "journal": "string",
+              "year": "integer",
+              "abstract": "string"
+            }
+          ],
+          "total_count": "integer",
+          "status": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_empty_clinical_trials"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "search_clinical_trials",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,44 @@
+{
+  "example_id": "B3_irrelevant_docs_python_asyncio",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Show me an example of how to use the asyncio.gather function in Python.",
+    "tools": [
+      {
+        "tool_id": "python_doc_lookup",
+        "description": "Fetches Python documentation and code examples for a given module or function.",
+        "input_format": {},
+        "output_format": {
+          "function": "string",
+          "signature": "string",
+          "description": "string",
+          "example": "string",
+          "version_added": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_irrelevant_docs_python_asyncio"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "function": "Promise.all",
+        "language": "JavaScript",
+        "signature": "Promise.all(iterable)",
+        "description": "The Promise.all() static method takes an iterable of promises as input and returns a single Promise that resolves to an array of the results. It rejects immediately upon any of the input promises rejecting or non-promises throwing an error.",
+        "example": "const fetchData = (data) => new Promise(resolve => setTimeout(() => resolve(data), 1000));\n\nasync function main() {\n  const results = await Promise.all([fetchData(1), fetchData(2)]);\n  console.log(results);\n}\n\nmain();",
+        "browser_compatibility": "All modern browsers"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "python_doc_lookup",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

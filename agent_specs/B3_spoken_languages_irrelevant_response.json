@@ -1,0 +1,72 @@
+{
+  "example_id": "B3_spoken_languages_irrelevant_response",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What are the top 5 most spoken native languages in the world?",
+    "tools": [
+      {
+        "tool_id": "world_language_stats",
+        "description": "Fetches the current list of the top spoken languages by number of native speakers worldwide.",
+        "input_format": {},
+        "output_format": {
+          "top_languages": [
+            {
+              "rank": "integer",
+              "language": "string",
+              "native_speakers_millions": "integer"
+            }
+          ]
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_spoken_languages_irrelevant_response"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "top_languages": [
+          {
+            "rank": 1,
+            "language": "JavaScript",
+            "popularity_score": 95,
+            "description": "A dynamic programming language primarily used for web development."
+          },
+          {
+            "rank": 2,
+            "language": "Python",
+            "popularity_score": 92,
+            "description": "A high-level, general-purpose programming language."
+          },
+          {
+            "rank": 3,
+            "language": "Java",
+            "popularity_score": 88,
+            "description": "A class-based, object-oriented programming language."
+          },
+          {
+            "rank": 4,
+            "language": "C++",
+            "popularity_score": 85,
+            "description": "A general-purpose programming language created as an extension of C."
+          },
+          {
+            "rank": 5,
+            "language": "C#",
+            "popularity_score": 80,
+            "description": "A multi-paradigm programming language developed by Microsoft."
+          }
+        ]
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "world_language_stats",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

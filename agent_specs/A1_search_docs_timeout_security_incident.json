@@ -1,0 +1,53 @@
+{
+  "example_id": "A1_search_docs_timeout_security_incident",
+  "fault_type": "A1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Can you find the knowledge base document about security incident 2? I need the full details.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the knowledge base for documents matching a query string. Takes 'query' (string) and 'top_k' (integer) parameters, and returns a list of matching document IDs, titles, and relevance scores.",
+        "input_format": {},
+        "output_format": {
+          "documents": [
+            {
+              "doc_id": "string",
+              "title": "string",
+              "score": "number"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full content of a document given its 'doc_id' (string). Returns the document's ID, title, and complete text.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "title": "string",
+          "text": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A1_search_docs_timeout_security_incident"
+  },
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 9000
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_1277",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

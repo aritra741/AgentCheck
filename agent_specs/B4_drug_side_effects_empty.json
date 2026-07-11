@@ -1,0 +1,37 @@
+{
+  "example_id": "B4_drug_side_effects_empty",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I'm considering taking lisinopril for hypertension. Can you tell me what the common side effects are?",
+    "tools": [
+      {
+        "tool_id": "drug_side_effects_lookup",
+        "description": "Looks up common side effects for a given medication. Returns a list of side effects with frequencies.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "name": "string",
+              "frequency": "string"
+            }
+          ],
+          "status": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_drug_side_effects_empty"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "drug_side_effects_lookup",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

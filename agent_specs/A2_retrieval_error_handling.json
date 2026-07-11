@@ -1,0 +1,54 @@
+{
+  "example_id": "A2_retrieval_error_handling",
+  "fault_type": "A2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I need to find all documents related to 'compliance incident 3' for an audit. Please search the knowledge base and give me the relevant document IDs and summaries.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the document knowledge base. Takes a query string and an integer top_k. Returns a list of matching documents with doc_id, score, and snippet.",
+        "input_format": {},
+        "output_format": {
+          "matches": [
+            {
+              "doc_id": "string",
+              "score": "number",
+              "snippet": "string"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full document content by its doc_id. Takes a doc_id string and returns the document text and metadata.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "text": "string",
+          "title": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A2_retrieval_error_handling"
+  },
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "500",
+      "error_message": "Internal Server Error: search index temporarily unavailable"
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_3233",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

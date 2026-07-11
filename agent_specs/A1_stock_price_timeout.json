@@ -1,0 +1,52 @@
+{
+  "example_id": "A1_stock_price_timeout",
+  "fault_type": "A1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current price of NVDA? I'm considering buying shares today.",
+    "tools": [
+      {
+        "tool_id": "get_stock_price",
+        "description": "Returns the current market price for a given stock ticker. Parameters: ticker (string, required) \u2014 the stock symbol (e.g., 'NVDA', 'AAPL'). Returns an object with ticker, price (float), currency, and timestamp.",
+        "input_format": {},
+        "output_format": {
+          "ticker": "string",
+          "price": "number",
+          "currency": "string",
+          "timestamp": "string"
+        }
+      },
+      {
+        "tool_id": "get_company_info",
+        "description": "Returns general information about a publicly traded company. Parameters: ticker (string, required). Returns company name, sector, market_cap, and a brief description.",
+        "input_format": {},
+        "output_format": {
+          "ticker": "string",
+          "name": "string",
+          "sector": "string",
+          "market_cap": "string",
+          "description": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A1_stock_price_timeout"
+  },
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 9000
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_stock_price",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "self_generated",
+    "source_id": "self_A1_stock_price_timeout",
+    "adaptation_type": "reformatted_and_schema_mapped"
+  }
+}

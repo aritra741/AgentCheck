@@ -1,0 +1,36 @@
+{
+  "example_id": "B4_south_america_capitals_empty",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What are the capital cities of all countries in South America?",
+    "tools": [
+      {
+        "tool_id": "get_capitals_by_region",
+        "description": "Fetches the capital cities of all countries in a specified region. Input: region name (e.g., 'South America', 'Europe').",
+        "input_format": {},
+        "output_format": {
+          "capitals": [
+            {
+              "country": "string",
+              "capital": "string"
+            }
+          ]
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_south_america_capitals_empty"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "get_capitals_by_region",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

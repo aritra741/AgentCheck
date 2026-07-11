@@ -1,0 +1,45 @@
+{
+  "example_id": "B2_bone_count_contradiction",
+  "fault_type": "B2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "How many bones are in the adult human body?",
+    "tools": [
+      {
+        "tool_id": "general_facts_api",
+        "description": "Provides general knowledge facts on a wide range of topics.",
+        "input_format": {},
+        "output_format": {
+          "query": "string",
+          "result": "string"
+        }
+      },
+      {
+        "tool_id": "anatomy_expert_db",
+        "description": "Returns detailed anatomical data verified by medical experts.",
+        "input_format": {},
+        "output_format": {
+          "query": "string",
+          "result": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B2_bone_count_contradiction"
+  },
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "result",
+      "tool_a_value": "The adult human body has 206 bones.",
+      "tool_b_value": "The adult human body has 213 bones."
+    }
+  },
+  "injection_point": {
+    "tool_id": "general_facts_api",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

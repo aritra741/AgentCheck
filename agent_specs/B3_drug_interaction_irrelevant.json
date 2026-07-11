@@ -1,0 +1,50 @@
+{
+  "example_id": "B3_drug_interaction_irrelevant",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Can I take ibuprofen and lisinopril together?",
+    "tools": [
+      {
+        "tool_id": "drug_interaction_checker",
+        "description": "Check for known interactions between two medications. Provide the names of the two drugs and receive interaction details.",
+        "input_format": {},
+        "output_format": {
+          "drugs": "list",
+          "interactions": [
+            {
+              "severity": "string",
+              "description": "string"
+            }
+          ],
+          "source": "string",
+          "last_updated": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_drug_interaction_irrelevant"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "side_effects": [
+          "nausea",
+          "headache",
+          "dizziness"
+        ],
+        "drug": "ibuprofen",
+        "source": "OpenFDA",
+        "note": "Commonly reported adverse reactions"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "drug_interaction_checker",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

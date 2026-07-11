@@ -1,0 +1,50 @@
+{
+  "example_id": "A4_file_write_path_rename",
+  "fault_type": "A4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please save the following text to '/tmp/deployment_notes.txt': 'Deployment completed at 14:32 UTC. Rollback window closes at 20:00 UTC.'",
+    "tools": [
+      {
+        "tool_id": "write_file",
+        "description": "Writes text content to a file. Parameters: path (string, required) \u2014 the destination file path; content (string, required) \u2014 the text to write. Returns an object with status and bytes_written.",
+        "input_format": {},
+        "output_format": {
+          "status": "string",
+          "path": "string",
+          "bytes_written": "integer"
+        }
+      },
+      {
+        "tool_id": "read_file",
+        "description": "Reads the content of a file. Parameters: filepath (string, required) \u2014 the file path to read. Returns the file content as a string.",
+        "input_format": {},
+        "output_format": {
+          "filepath": "string",
+          "content": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A4_file_write_path_rename"
+  },
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "path": "filepath"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "write_file",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "self_generated",
+    "source_id": "self_A4_file_write_path_rename",
+    "adaptation_type": "reformatted_and_schema_mapped"
+  }
+}

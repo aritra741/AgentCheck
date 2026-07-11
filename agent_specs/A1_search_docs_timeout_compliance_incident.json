@@ -1,0 +1,54 @@
+{
+  "example_id": "A1_search_docs_timeout_compliance_incident",
+  "fault_type": "A1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please search the document database for any records about 'compliance incident 3' and then look at the top results to understand what happened.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the document database for a given query string and returns the top_k most relevant documents, each with doc_id, title, and a short snippet.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "doc_id": "string",
+              "title": "string",
+              "snippet": "string",
+              "relevance": "number"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full content of a document given its document ID. Returns the document's id, title, and full text.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "title": "string",
+          "text": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A1_search_docs_timeout_compliance_incident"
+  },
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 8000
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "dev_retrieval_0037",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

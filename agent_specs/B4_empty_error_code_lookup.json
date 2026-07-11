@@ -1,0 +1,39 @@
+{
+  "example_id": "B4_empty_error_code_lookup",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What does error code ERR_CONN_REFUSED_450 mean in Nginx?",
+    "tools": [
+      {
+        "tool_id": "error_code_lookup",
+        "description": "Searches a database of system error codes and returns matching definitions, common causes, and suggested fixes.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "error_code": "string",
+              "definition": "string",
+              "causes": "list",
+              "fixes": "list"
+            }
+          ],
+          "status": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_empty_error_code_lookup"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "error_code_lookup",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

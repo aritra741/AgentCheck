@@ -1,0 +1,57 @@
+{
+  "example_id": "A2_validate_cron_service_error",
+  "fault_type": "A2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I need to check if the cron schedule '5 4 * * *' is valid. Can you validate it for me?",
+    "tools": [
+      {
+        "tool_id": "validate_cron",
+        "description": "Validates a cron expression. Takes a single parameter 'cron' (string) and returns a JSON object with a boolean 'valid' field and an optional 'message' string.",
+        "input_format": {},
+        "output_format": {
+          "valid": "boolean",
+          "message": "string"
+        }
+      },
+      {
+        "tool_id": "create_job",
+        "description": "Creates a new scheduled job. Required parameters: 'name' (string), 'cron' (string), 'command' (string). Returns a JSON object with the job details.",
+        "input_format": {},
+        "output_format": {
+          "job": {
+            "name": "string",
+            "cron": "string",
+            "command": "string"
+          }
+        }
+      },
+      {
+        "tool_id": "list_jobs",
+        "description": "Lists all existing scheduled jobs. No parameters required. Returns an array of job objects.",
+        "input_format": {},
+        "output_format": "a value like: [{\"name\": \"seed_job_dev_4\", \"cron\": \"0 * * * *\", \"command\": \"seed_task\"}]"
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A2_validate_cron_service_error"
+  },
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "VALIDATION_SERVICE_DOWN",
+      "error_message": "The cron validation service encountered an internal error and could not process the request. Please try again later."
+    }
+  },
+  "injection_point": {
+    "tool_id": "validate_cron",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "dev_scheduling_0599",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

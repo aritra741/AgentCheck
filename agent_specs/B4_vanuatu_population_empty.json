@@ -1,0 +1,35 @@
+{
+  "example_id": "B4_vanuatu_population_empty",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current population of Vanuatu?",
+    "tools": [
+      {
+        "tool_id": "country_info",
+        "description": "Returns demographic and geographic information about a country, including population, capital, area, and currency. Requires country name.",
+        "input_format": {},
+        "output_format": {
+          "country": "string",
+          "capital": "string",
+          "population": "integer",
+          "area_km2": "integer",
+          "currency": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_vanuatu_population_empty"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "country_info",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

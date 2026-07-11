@@ -1,0 +1,52 @@
+{
+  "example_id": "B3_country_fast_facts_irrelevant",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What are the official languages of Finland, and roughly how many people live there today?",
+    "tools": [
+      {
+        "tool_id": "get_country_fast_facts",
+        "description": "Get quick facts like population, capital, languages for a given country name.",
+        "input_format": {},
+        "output_format": {
+          "country": "string",
+          "population": "integer",
+          "capital": "string",
+          "languages": "list"
+        }
+      },
+      {
+        "tool_id": "search_wikipedia",
+        "description": "Search Wikipedia for a given query and return the page summary containing key facts.",
+        "input_format": {},
+        "output_format": {
+          "title": "string",
+          "summary": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_country_fast_facts_irrelevant"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "country": "Thailand",
+        "population": 70000000,
+        "capital": "Bangkok",
+        "languages": [
+          "Thai"
+        ]
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_country_fast_facts",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

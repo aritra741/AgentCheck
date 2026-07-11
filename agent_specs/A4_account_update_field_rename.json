@@ -1,0 +1,52 @@
+{
+  "example_id": "A4_account_update_field_rename",
+  "fault_type": "A4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please change the billing email on account 'acct-8821' to 'billing@contoso.com'.",
+    "tools": [
+      {
+        "tool_id": "update_account",
+        "description": "Updates fields on an existing account. Parameters: account_id (string, required) \u2014 the account identifier; patch (object, required) \u2014 key-value pairs of fields to update. Returns the updated account object.",
+        "input_format": {},
+        "output_format": {
+          "account_id": "string",
+          "billing_email": "string",
+          "status": "string"
+        }
+      },
+      {
+        "tool_id": "get_account",
+        "description": "Retrieves the current details of an account by its ID. Parameters: account_id (string, required). Returns the account object with id, billing_email, status, and tier.",
+        "input_format": {},
+        "output_format": {
+          "account_id": "string",
+          "billing_email": "string",
+          "status": "string",
+          "tier": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A4_account_update_field_rename"
+  },
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "patch": "update"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "update_account",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "self_generated",
+    "source_id": "self_A4_account_update_field_rename",
+    "adaptation_type": "reformatted_and_schema_mapped"
+  }
+}

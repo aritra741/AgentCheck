@@ -1,0 +1,51 @@
+{
+  "example_id": "B3_irrelevant_docs_search",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the correct Python 3.12 syntax for creating an asynchronous generator function that yields items from a list? Provide a code example from the official documentation.",
+    "tools": [
+      {
+        "tool_id": "search_python_docs",
+        "description": "Searches the official Python documentation for a given query and returns relevant code examples and explanations.",
+        "input_format": {},
+        "output_format": {
+          "query": "string",
+          "results": [
+            {
+              "url": "string",
+              "title": "string",
+              "snippet": "string",
+              "code_example": "string"
+            }
+          ]
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_irrelevant_docs_search"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "query": "decorator example",
+        "results": [
+          {
+            "url": "https://docs.python.org/3/glossary.html#term-decorator",
+            "title": "Decorator",
+            "snippet": "A function returning another function, usually applied as a function transformation...",
+            "code_example": "def my_decorator(func):\n    def wrapper(*args, **kwargs):\n        print(f'Calling {func.__name__}') # irrelevant_example_B3_code_technical_9x3\n        return func(*args, **kwargs)\n    return wrapper\n\n@my_decorator\ndef greet(name):\n    print(f'Hello {name}')"
+          }
+        ]
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_python_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

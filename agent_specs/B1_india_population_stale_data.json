@@ -1,0 +1,57 @@
+{
+  "example_id": "B1_india_population_stale_data",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current population of India? I need the most recent figure.",
+    "tools": [
+      {
+        "tool_id": "get_country_population",
+        "description": "Returns the population of a given country based on the latest census or official estimate.",
+        "input_format": {},
+        "output_format": {
+          "country": "string",
+          "population": "integer",
+          "year": "integer",
+          "source": "string"
+        }
+      },
+      {
+        "tool_id": "search_web",
+        "description": "Searches the web for current information and returns relevant snippets.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "title": "string",
+              "snippet": "string",
+              "url": "string",
+              "date": "string"
+            }
+          ]
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_india_population_stale_data"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "country": "India",
+        "population": 1210569573,
+        "year": 2011,
+        "source": "Census of India 2011"
+      },
+      "stale_date": "2011-03-01"
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_country_population",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

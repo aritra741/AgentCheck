@@ -1,0 +1,47 @@
+{
+  "example_id": "B2_tallest_mountain_conflict",
+  "fault_type": "B2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the tallest mountain in the world?",
+    "tools": [
+      {
+        "tool_id": "mountain_elevation_api",
+        "description": "Returns the height of a mountain above sea level.",
+        "input_format": {},
+        "output_format": {
+          "mountain": "string",
+          "height_meters": "integer",
+          "measurement": "string"
+        }
+      },
+      {
+        "tool_id": "geological_survey_db",
+        "description": "Returns geographical data including mountain heights measured from base to summit.",
+        "input_format": {},
+        "output_format": {
+          "mountain": "string",
+          "height_meters": "integer",
+          "measurement": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B2_tallest_mountain_conflict"
+  },
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "height_meters",
+      "tool_a_value": 8848,
+      "tool_b_value": 10211
+    }
+  },
+  "injection_point": {
+    "tool_id": "mountain_elevation_api",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

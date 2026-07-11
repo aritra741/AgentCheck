@@ -1,0 +1,58 @@
+{
+  "example_id": "A4_scheduling_cron_validation_schema_drift",
+  "fault_type": "A4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I need to schedule a data backup job with the cron expression '0 * * * *'. Before creating the job, can you validate that this cron expression is correct?",
+    "tools": [
+      {
+        "tool_id": "validate_cron",
+        "description": "Validates a cron expression. Takes a single parameter 'cron' (string) containing the expression. Returns a JSON object with 'valid' boolean and 'expression' string.",
+        "input_format": {},
+        "output_format": {
+          "valid": "boolean",
+          "expression": "string",
+          "message": "string"
+        }
+      },
+      {
+        "tool_id": "create_job",
+        "description": "Creates a scheduled job. Takes parameters: name (string), cron (string), command (string). Returns a job object with creation status.",
+        "input_format": {},
+        "output_format": {
+          "name": "string",
+          "cron": "string",
+          "command": "string",
+          "status": "string"
+        }
+      },
+      {
+        "tool_id": "list_jobs",
+        "description": "Lists all scheduled jobs. Returns an array of job objects.",
+        "input_format": {},
+        "output_format": "a value like: [{\"name\": \"seed_job_train_2\", \"cron\": \"0 * * * *\", \"command\": \"seed_task\"}]"
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A4_scheduling_cron_validation_schema_drift"
+  },
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "cron": "schedule"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "validate_cron",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_scheduling_2547",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

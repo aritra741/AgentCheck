@@ -1,0 +1,44 @@
+{
+  "example_id": "B1_flu_cases_stale",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I need the most recent weekly confirmed influenza cases and deaths in the United States from the CDC for my health report. Can you check the CDC data for the current numbers?",
+    "tools": [
+      {
+        "tool_id": "get_flu_data",
+        "description": "Retrieves the latest weekly influenza surveillance data from the CDC FluView API. Returns the current week's confirmed cases, deaths, and reporting details.",
+        "input_format": {},
+        "output_format": {
+          "week": "string",
+          "confirmed_cases": "integer",
+          "deaths": "integer",
+          "source": "string",
+          "last_updated": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_flu_cases_stale"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "week": "2024-W03",
+        "confirmed_cases": 11234,
+        "deaths": 89,
+        "source": "CDC FluView",
+        "last_updated": "2024-01-23T12:00:00Z"
+      },
+      "stale_date": "2024-01-23"
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_flu_data",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,50 @@
+{
+  "example_id": "B2_nodejs_lts_version_conflict",
+  "fault_type": "B2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What's the latest LTS version of Node.js?",
+    "tools": [
+      {
+        "tool_id": "get_npm_package_version",
+        "description": "Fetches the latest version of an npm package from the official registry.",
+        "input_format": {},
+        "output_format": {
+          "package": "string",
+          "version": "string",
+          "release_date": "string",
+          "lts": "boolean"
+        }
+      },
+      {
+        "tool_id": "get_github_release",
+        "description": "Fetches the latest release version from a GitHub repository's releases.",
+        "input_format": {},
+        "output_format": {
+          "repository": "string",
+          "tag_name": "string",
+          "published_at": "string",
+          "prerelease": "boolean",
+          "lts": "boolean"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B2_nodejs_lts_version_conflict"
+  },
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "version",
+      "tool_a_value": "18.20.3",
+      "tool_b_value": "18.20.4"
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_npm_package_version",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

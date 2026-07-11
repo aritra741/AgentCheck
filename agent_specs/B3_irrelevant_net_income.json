@@ -1,0 +1,45 @@
+{
+  "example_id": "B3_irrelevant_net_income",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What was JPMorgan Chase's net income for fiscal year 2023?",
+    "tools": [
+      {
+        "tool_id": "get_financial_data",
+        "description": "Retrieves financial data for a given company. Provide the company name, the desired financial metric (e.g., revenue, net_income, EBITDA, etc.), and the period (e.g., Q4 2024, FY2023).",
+        "input_format": {},
+        "output_format": {
+          "company": "string",
+          "metric": "string",
+          "period": "string",
+          "value": "integer",
+          "currency": "string",
+          "source": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_irrelevant_net_income"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "company": "Tesla Inc.",
+        "metric": "vehicle_deliveries",
+        "period": "Q3 2024",
+        "value": 462890,
+        "unit": "vehicles",
+        "source": "Tesla Q3 2024 Production & Deliveries"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_financial_data",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

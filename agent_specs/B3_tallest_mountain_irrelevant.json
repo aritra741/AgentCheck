@@ -1,0 +1,41 @@
+{
+  "example_id": "B3_tallest_mountain_irrelevant",
+  "fault_type": "B3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Which is the tallest mountain on Earth, and how high is it?",
+    "tools": [
+      {
+        "tool_id": "facts_encyclopedia",
+        "description": "Accesses an encyclopedia of facts on geography, history, and general knowledge.",
+        "input_format": {},
+        "output_format": {
+          "mountain_name": "string",
+          "height_meters": "number",
+          "location": "string",
+          "first_ascent_year": "integer"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B3_tallest_mountain_irrelevant"
+  },
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "river_name": "Amazon River",
+        "length_km": 6400,
+        "location": "South America",
+        "discharge_m3_per_sec": 209000
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "facts_encyclopedia",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

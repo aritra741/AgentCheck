@@ -1,0 +1,33 @@
+{
+  "example_id": "B4_tardigrade_species_empty_result",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "How many species of tardigrades are known to science?",
+    "tools": [
+      {
+        "tool_id": "biodiversity_database",
+        "description": "Queries a biodiversity database for the number of known species for a given organism.",
+        "input_format": {},
+        "output_format": {
+          "organism": "string",
+          "known_species_count": "integer",
+          "source": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_tardigrade_species_empty_result"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "biodiversity_database",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

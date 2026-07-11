@@ -1,0 +1,39 @@
+{
+  "example_id": "B4_finance_empty_holdings",
+  "fault_type": "B4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What are my current stock holdings and their total market value?",
+    "tools": [
+      {
+        "tool_id": "get_current_holdings",
+        "description": "Retrieves the authenticated user's current stock portfolio holdings, including ticker, quantity, and current market price.",
+        "input_format": {},
+        "output_format": {
+          "holdings": [
+            {
+              "ticker": "string",
+              "quantity": "integer",
+              "current_price": "number"
+            }
+          ],
+          "total_value": "number",
+          "as_of": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B4_finance_empty_holdings"
+  },
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "injection_point": {
+    "tool_id": "get_current_holdings",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

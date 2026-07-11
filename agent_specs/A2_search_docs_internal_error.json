@@ -1,0 +1,53 @@
+{
+  "example_id": "A2_search_docs_internal_error",
+  "fault_type": "A2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Can you look up the docs for 'onboarding incident 11' and give me a summary of the top findings?",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the documentation knowledge base and returns a list of document IDs with relevance scores based on a query string.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "doc_id": "string",
+              "score": "number"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full content of a document given its ID.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "title": "string",
+          "text": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A2_search_docs_internal_error"
+  },
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "INTERNAL_ERROR",
+      "error_message": "An unexpected error occurred while processing the query. Please try again."
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "dev_retrieval_0113",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

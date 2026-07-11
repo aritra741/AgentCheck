@@ -1,0 +1,40 @@
+{
+  "example_id": "A2_cron_validation_error",
+  "fault_type": "A2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please check if the cron schedule '0 0 * * *' is valid and let me know the next execution time.",
+    "tools": [
+      {
+        "tool_id": "validate_cron",
+        "description": "Validates a cron expression and returns whether it is valid, the next scheduled execution time, and a human readable description.",
+        "input_format": {},
+        "output_format": {
+          "valid": "boolean",
+          "next_run": "string",
+          "description": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A2_cron_validation_error"
+  },
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "500",
+      "error_message": "Internal server error: cron validation service is temporarily unavailable."
+    }
+  },
+  "injection_point": {
+    "tool_id": "validate_cron",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_scheduling_2027",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

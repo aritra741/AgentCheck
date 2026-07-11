@@ -1,0 +1,51 @@
+{
+  "example_id": "B2_dallas_population_conflict",
+  "fault_type": "B2",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current population of Dallas, Texas?",
+    "tools": [
+      {
+        "tool_id": "us_census_bureau_api",
+        "description": "Returns official US Census Bureau population estimates for US cities and metropolitan areas. Covers both city-proper and metropolitan statistical area (MSA) figures.",
+        "input_format": {},
+        "output_format": {
+          "location": "string",
+          "population": "integer",
+          "year": "integer",
+          "definition": "string",
+          "source": "string"
+        }
+      },
+      {
+        "tool_id": "us_metro_demographics_api",
+        "description": "Returns population estimates for US metropolitan and micropolitan statistical areas as defined by the Office of Management and Budget.",
+        "input_format": {},
+        "output_format": {
+          "location": "string",
+          "population": "integer",
+          "year": "integer",
+          "definition": "string",
+          "source": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B2_dallas_population_conflict"
+  },
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "population",
+      "tool_a_value": 1304379,
+      "tool_b_value": 7837024
+    }
+  },
+  "injection_point": {
+    "tool_id": "us_census_bureau_api",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,53 @@
+{
+  "example_id": "A1_search_docs_timeout",
+  "fault_type": "A1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please search the document repository for any records about onboarding incident 14. I need the full details, so if you find the relevant document, retrieve its complete content.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches a collection of documents by a query string. Returns a list of top_k matching document IDs, titles, and brief snippets.",
+        "input_format": {},
+        "output_format": {
+          "matches": [
+            {
+              "doc_id": "string",
+              "title": "string",
+              "snippet": "string"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Fetches the full text of a document given its unique ID. Returns the doc_id, title, and full text.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "title": "string",
+          "text": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A1_search_docs_timeout"
+  },
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 8000
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_0133",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

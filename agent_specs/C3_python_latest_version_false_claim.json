@@ -1,0 +1,40 @@
+{
+  "example_id": "C3_python_latest_version_false_claim",
+  "fault_type": "C3",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the latest stable version of Python?",
+    "tools": [
+      {
+        "tool_id": "python_docs_search",
+        "description": "Search the official Python documentation for information about versions, features, and updates. Returns a snippet of relevant text.",
+        "input_format": {},
+        "output_format": {
+          "status": "string",
+          "document_title": "string",
+          "snippet": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "C3_python_latest_version_false_claim"
+  },
+  "fault_spec": {
+    "action": "inject_false_claim",
+    "params": {
+      "false_claim": "Python 3.9 is the latest stable release.",
+      "false_claim_aliases": [
+        "The latest stable version is Python 3.9",
+        "Python 3.9 is the current stable release",
+        "Python 3.9 is the most recent stable version"
+      ]
+    }
+  },
+  "injection_point": {
+    "tool_id": "python_docs_search",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

@@ -1,0 +1,61 @@
+{
+  "example_id": "A1_validate_cron_timeout",
+  "fault_type": "A1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Can you check if the cron expression '30 2 * * *' is valid? I need to schedule a maintenance job at 2:30 AM every day.",
+    "tools": [
+      {
+        "tool_id": "validate_cron",
+        "description": "Validates a cron expression and returns whether it is correct along with a human-readable explanation of the schedule.",
+        "input_format": {},
+        "output_format": {
+          "valid": "boolean",
+          "description": "string"
+        }
+      },
+      {
+        "tool_id": "create_job",
+        "description": "Creates a new scheduled job with a name, cron expression, and command.",
+        "input_format": {},
+        "output_format": {
+          "success": "boolean",
+          "job_name": "string"
+        }
+      },
+      {
+        "tool_id": "list_jobs",
+        "description": "Lists all currently scheduled jobs.",
+        "input_format": {},
+        "output_format": {
+          "jobs": [
+            {
+              "name": "string",
+              "cron": "string",
+              "command": "string"
+            }
+          ]
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A1_validate_cron_timeout"
+  },
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 5000
+    }
+  },
+  "injection_point": {
+    "tool_id": "validate_cron",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_scheduling_2399",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

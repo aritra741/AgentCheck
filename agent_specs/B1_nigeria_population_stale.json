@@ -1,0 +1,40 @@
+{
+  "example_id": "B1_nigeria_population_stale",
+  "fault_type": "B1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "What is the current population of Nigeria?",
+    "tools": [
+      {
+        "tool_id": "get_country_population",
+        "description": "Get the most recent population estimate for a given country. Returns total population count and the year of the estimate.",
+        "input_format": {},
+        "output_format": {
+          "country": "string",
+          "population": "integer",
+          "year": "integer"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "B1_nigeria_population_stale"
+  },
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "country": "Nigeria",
+        "population": 158000000,
+        "year": 2010
+      },
+      "stale_date": "2010-01-01"
+    }
+  },
+  "injection_point": {
+    "tool_id": "get_country_population",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": null
+}

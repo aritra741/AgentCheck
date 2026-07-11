@@ -1,0 +1,57 @@
+{
+  "example_id": "A4_schema_drift_search_docs_query_to_q",
+  "fault_type": "A4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Search the knowledge base for documents about 'onboarding incident 14' and provide me the most relevant results with their content.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches the knowledge base for documents matching the given query. Parameters: query (string, required), top_k (integer, required). Returns a list of document objects with id, title, snippet, and score.",
+        "input_format": {},
+        "output_format": {
+          "results": [
+            {
+              "id": "string",
+              "title": "string",
+              "snippet": "string",
+              "score": "number"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves a single document by its ID. Parameter: doc_id (string, required). Returns the complete document object with id, title, text, and metadata.",
+        "input_format": {},
+        "output_format": {
+          "id": "string",
+          "title": "string",
+          "text": "string",
+          "metadata": {}
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A4_schema_drift_search_docs_query_to_q"
+  },
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "query": "q"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_3057",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

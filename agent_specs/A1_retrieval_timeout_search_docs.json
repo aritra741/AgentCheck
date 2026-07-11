@@ -1,0 +1,47 @@
+{
+  "example_id": "A1_retrieval_timeout_search_docs",
+  "fault_type": "A1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Search the knowledge base for 'retention incident 7'. I need the relevant documents.",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Searches a document knowledge base. Takes a query string (query) and an integer number of results to return (top_k). Returns a JSON object with two lists: 'doc_ids' containing the IDs of the best matching documents, and 'scores' with the corresponding relevance scores (0-1).",
+        "input_format": {},
+        "output_format": {
+          "doc_ids": "list",
+          "scores": "list"
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieves the full content of a document by its ID. Takes a single parameter doc_id (string). Returns a JSON object with the document's 'title' and 'text' fields.",
+        "input_format": {},
+        "output_format": {
+          "title": "string",
+          "text": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A1_retrieval_timeout_search_docs"
+  },
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 10000
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "train_retrieval_3509",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

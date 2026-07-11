@@ -1,0 +1,61 @@
+{
+  "example_id": "A4_validate_cron_schema_drift",
+  "fault_type": "A4",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "Please check if the cron expression '0 0 * * *' is a valid schedule.",
+    "tools": [
+      {
+        "tool_id": "validate_cron",
+        "description": "Validate a cron expression. Takes a parameter 'cron' (string) and returns a JSON object with a boolean 'valid' indicating if the expression is syntactically correct.",
+        "input_format": {},
+        "output_format": {
+          "valid": "boolean"
+        }
+      },
+      {
+        "tool_id": "list_jobs",
+        "description": "List all scheduled jobs.",
+        "input_format": {},
+        "output_format": {
+          "jobs": [
+            {
+              "command": "string",
+              "cron": "string",
+              "name": "string"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "create_job",
+        "description": "Create a new scheduled job. Takes parameters 'name' (string), 'cron' (string), 'command' (string).",
+        "input_format": {},
+        "output_format": {
+          "status": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A4_validate_cron_schema_drift"
+  },
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "cron": "schedule"
+      }
+    }
+  },
+  "injection_point": {
+    "tool_id": "validate_cron",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "test_public_scheduling_0471",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

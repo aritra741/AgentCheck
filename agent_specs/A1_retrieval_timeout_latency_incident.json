@@ -1,0 +1,52 @@
+{
+  "example_id": "A1_retrieval_timeout_latency_incident",
+  "fault_type": "A1",
+  "agent_spec": {
+    "model": "gpt-4o-mini",
+    "harness": "native_tool_calling",
+    "task": "I need the root cause analysis and mitigation steps for latency incident 13. Can you look it up in the knowledge base and summarize the key points?",
+    "tools": [
+      {
+        "tool_id": "search_docs",
+        "description": "Search the internal documentation knowledge base. Takes a query string and a top_k integer specifying the maximum number of results to return. Returns a list of matched document objects, each containing a doc_id and title.",
+        "input_format": {},
+        "output_format": {
+          "matches": [
+            {
+              "doc_id": "string",
+              "title": "string"
+            }
+          ]
+        }
+      },
+      {
+        "tool_id": "get_doc",
+        "description": "Retrieve the full content of a document by its doc_id. Takes a single doc_id string and returns the full document text.",
+        "input_format": {},
+        "output_format": {
+          "doc_id": "string",
+          "text": "string",
+          "title": "string"
+        }
+      }
+    ],
+    "max_steps": 10,
+    "agent_id": "A1_retrieval_timeout_latency_incident"
+  },
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 8000
+    }
+  },
+  "injection_point": {
+    "tool_id": "search_docs",
+    "occurrence": 1
+  },
+  "endpoint_allowlist": [],
+  "source": {
+    "origin": "toolmisusebench",
+    "source_id": "dev_retrieval_0421",
+    "adaptation_type": "reformatted_and_fault_mapped"
+  }
+}

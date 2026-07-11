@@ -33,10 +33,5 @@
   },
   "endpoint_allowlist": [
     "https://www.example.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Puppeteer_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

@@ -48,10 +48,5 @@
     "tool_id": "qubit",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "FileSystem_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  "endpoint_allowlist": []
 }

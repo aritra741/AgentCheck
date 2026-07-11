@@ -8,7 +8,7 @@
     "tools": [
       {
         "tool_id": "write_file",
-        "description": "Writes text content to a file. Parameters: path (string, required) \u2014 the destination file path; content (string, required) \u2014 the text to write. Returns an object with status and bytes_written.",
+        "description": "Writes text content to a file. Parameters: path (string, required) — the destination file path; content (string, required) — the text to write. Returns an object with status and bytes_written.",
         "input_format": {},
         "output_format": {
           "status": "string",
@@ -18,7 +18,7 @@
       },
       {
         "tool_id": "read_file",
-        "description": "Reads the content of a file. Parameters: filepath (string, required) \u2014 the file path to read. Returns the file content as a string.",
+        "description": "Reads the content of a file. Parameters: filepath (string, required) — the file path to read. Returns the file content as a string.",
         "input_format": {},
         "output_format": {
           "filepath": "string",
@@ -41,10 +41,5 @@
     "tool_id": "write_file",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "self_generated",
-    "source_id": "self_A4_file_write_path_rename",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  "endpoint_allowlist": []
 }

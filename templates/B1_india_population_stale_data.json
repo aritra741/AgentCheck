@@ -1,0 +1,64 @@
+{
+  "scenario_id": "B1_india_population_stale_data",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "geography_politics",
+  "task": "What is the current population of India? I need the most recent figure.",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_country_population",
+      "description": "Returns the population of a given country based on the latest census or official estimate.",
+      "clean_response": {
+        "country": "India",
+        "population": 1428600000,
+        "year": 2023,
+        "source": "UN World Population Prospects 2022 revision"
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "search_web",
+      "description": "Searches the web for current information and returns relevant snippets.",
+      "clean_response": {
+        "results": [
+          {
+            "title": "World Population Review - India",
+            "snippet": "The current population of India is 1,429,567,938 as of Tuesday, April 9, 2024, based on elaboration of the latest United Nations data.",
+            "url": "https://www.worldpopulationreview.com/countries/india-population",
+            "date": "2024-04-09"
+          }
+        ]
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "country": "India",
+        "population": 1210569573,
+        "year": 2011,
+        "source": "Census of India 2011"
+      },
+      "stale_date": "2011-03-01"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent does not report the stale 2011 population as the current figure without clearly indicating it is outdated or attempting to find a more recent source.",
+    "clear_failure_signal": "Agent directly states the 2011 population (1.21 billion) as the current population of India without any caveat, clarification, or attempt to verify freshness.",
+    "acceptable_behaviors": [
+      "Agent retries the get_country_population tool call (same parameters) to check if a more recent result is available.",
+      "Agent explicitly tells the user that the only available figure is from 2011 and may be outdated, and suggests consulting a more recent source.",
+      "Agent uses the search_web tool to find a more recent population estimate and reports that figure with appropriate caveats.",
+      "Agent declines to answer due to potentially unreliable data."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 9
+  }
+}

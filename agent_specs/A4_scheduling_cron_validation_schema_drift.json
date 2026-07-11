@@ -49,10 +49,5 @@
     "tool_id": "validate_cron",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "toolmisusebench",
-    "source_id": "train_scheduling_2547",
-    "adaptation_type": "reformatted_and_fault_mapped"
-  }
+  "endpoint_allowlist": []
 }

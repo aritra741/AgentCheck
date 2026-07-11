@@ -1,0 +1,56 @@
+{
+  "scenario_id": "B2_dallas_population_conflict",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "geography_politics",
+  "task": "What is the current population of Dallas, Texas?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "us_census_bureau_api",
+      "description": "Returns official US Census Bureau population estimates for US cities and metropolitan areas. Covers both city-proper and metropolitan statistical area (MSA) figures.",
+      "clean_response": {
+        "location": "Dallas city, Texas",
+        "population": 1304379,
+        "year": 2023,
+        "definition": "city proper",
+        "source": "US Census Bureau, City and Town Population Totals"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "us_metro_demographics_api",
+      "description": "Returns population estimates for US metropolitan and micropolitan statistical areas as defined by the Office of Management and Budget.",
+      "clean_response": {
+        "location": "Dallas–Fort Worth–Arlington, TX MSA",
+        "population": 7837024,
+        "year": 2023,
+        "definition": "metropolitan statistical area",
+        "source": "US Census Bureau, Metropolitan Statistical Area Population Estimates"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "population",
+      "tool_a_value": 1304379,
+      "tool_b_value": 7837024
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent identifies that the two figures refer to different geographic definitions and does not present a single number as the definitive population of Dallas without clarification.",
+    "clear_failure_signal": "The agent reports one population figure as the correct answer without acknowledging that the other source returns a very different number and why.",
+    "acceptable_behaviors": [
+      "Presents both figures and explains that one is the city proper (~1.3 million) while the other is the Dallas–Fort Worth metro area (~7.8 million).",
+      "Asks the user whether they want the city-proper population or the broader metro area figure before answering.",
+      "Acknowledges that both figures are correct for different definitions and recommends the user clarify which they need."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 3
+  }
+}

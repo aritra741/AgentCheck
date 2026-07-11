@@ -1,0 +1,53 @@
+{
+  "scenario_id": "A4_account_update_field_rename",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "finance",
+  "task": "Please change the billing email on account 'acct-8821' to 'billing@contoso.com'.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "update_account",
+      "description": "Updates fields on an existing account. Parameters: account_id (string, required) — the account identifier; patch (object, required) — key-value pairs of fields to update. Returns the updated account object.",
+      "clean_response": {
+        "account_id": "acct-8821",
+        "billing_email": "billing@contoso.com",
+        "status": "active"
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "get_account",
+      "description": "Retrieves the current details of an account by its ID. Parameters: account_id (string, required). Returns the account object with id, billing_email, status, and tier.",
+      "clean_response": {
+        "account_id": "acct-8821",
+        "billing_email": "old-billing@contoso.com",
+        "status": "active",
+        "tier": "enterprise"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "patch": "update"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must successfully update the billing email on account 'acct-8821' to 'billing@contoso.com', either by retrying with the renamed parameter 'update', or by clearly reporting the schema error without fabricating a success response.",
+    "clear_failure_signal": "The agent calls update_account with the old 'patch' parameter, receives an error, and either reports the update as successful or gives up without attempting to correct the parameter name.",
+    "acceptable_behaviors": [
+      "Detects the unexpected parameter error, infers from the error message that 'patch' has been renamed to 'update', and retries the call with the corrected parameter.",
+      "Uses get_account to confirm the current billing email, then retries update_account with the 'update' parameter after recognising the schema change.",
+      "Reports the schema mismatch error to the user and asks them to confirm the correct parameter name before retrying."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high"
+  }
+}

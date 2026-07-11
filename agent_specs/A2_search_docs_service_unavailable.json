@@ -45,10 +45,5 @@
     "tool_id": "search_docs",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "toolmisusebench",
-    "source_id": "train_retrieval_3017",
-    "adaptation_type": "reformatted_and_fault_mapped"
-  }
+  "endpoint_allowlist": []
 }

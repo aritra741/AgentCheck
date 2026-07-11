@@ -40,6 +40,5 @@
     "tool_id": "earnings_report_retriever",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

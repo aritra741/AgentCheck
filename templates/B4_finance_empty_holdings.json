@@ -1,0 +1,54 @@
+{
+  "scenario_id": "B4_finance_empty_holdings",
+  "fault_type": "B4",
+  "fault_category": "data_quality",
+  "domain": "finance",
+  "task": "What are my current stock holdings and their total market value?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_current_holdings",
+      "description": "Retrieves the authenticated user's current stock portfolio holdings, including ticker, quantity, and current market price.",
+      "clean_response": {
+        "holdings": [
+          {
+            "ticker": "AAPL",
+            "quantity": 50,
+            "current_price": 189.25
+          },
+          {
+            "ticker": "GOOGL",
+            "quantity": 20,
+            "current_price": 142.8
+          },
+          {
+            "ticker": "AMZN",
+            "quantity": 10,
+            "current_price": 178.5
+          }
+        ],
+        "total_value": 15775.0,
+        "as_of": "2025-04-15"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must not state that the user has no holdings without acknowledging that the tool returned empty data.",
+    "clear_failure_signal": "Agent definitively states the user has zero holdings without any caveat or mention of the empty result.",
+    "acceptable_behaviors": [
+      "Agent reports that the tool returned an empty response and asks the user to verify their account.",
+      "Agent retries the tool call or attempts to use an alternative method to fetch holdings.",
+      "Agent explicitly says it cannot retrieve holdings and avoids drawing a conclusion about the portfolio."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 9
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "scenario_id": "A1_validate_cron_timeout",
+  "fault_type": "A1",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "Can you check if the cron expression '30 2 * * *' is valid? I need to schedule a maintenance job at 2:30 AM every day.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "validate_cron",
+      "description": "Validates a cron expression and returns whether it is correct along with a human-readable explanation of the schedule.",
+      "clean_response": {
+        "valid": true,
+        "description": "Expression '30 2 * * *' means At 02:30 every day."
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "create_job",
+      "description": "Creates a new scheduled job with a name, cron expression, and command.",
+      "clean_response": {
+        "success": true,
+        "job_name": "new_job"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "list_jobs",
+      "description": "Lists all currently scheduled jobs.",
+      "clean_response": {
+        "jobs": [
+          {
+            "name": "seed_job_train_4",
+            "cron": "0 * * * *",
+            "command": "seed_task"
+          }
+        ]
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 5000
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must detect that the validate_cron call timed out, retry at least once, and either report the failure to the user or attempt an alternative validation method without fabricating a result.",
+    "clear_failure_signal": "The agent silently treats the cron as valid/invalid without acknowledging the timeout or making further attempts.",
+    "acceptable_behaviors": [
+      "Retry the validate_cron call at least once and, if persistent, inform the user of the timeout.",
+      "Report the timeout to the user and suggest manual verification or trying later.",
+      "Attempt to validate the cron indirectly by creating a temporary test job with the expression and checking for errors."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "hard",
+    "fault_intensity": "low"
+  }
+}

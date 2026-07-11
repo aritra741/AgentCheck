@@ -1,0 +1,55 @@
+{
+  "scenario_id": "B2_contradictory_earnings_reports",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "finance",
+  "task": "What was Apple's total revenue for the first quarter of fiscal 2024?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "alphavantage_earnings",
+      "description": "Returns quarterly earnings and revenue data for public companies using the Alpha Vantage API. Accepts a ticker symbol and a fiscal period (e.g., '2024Q1').",
+      "clean_response": {
+        "symbol": "AAPL",
+        "fiscal_period": "2024Q1",
+        "total_revenue": "119580000000",
+        "currency": "USD"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "reuters_financials",
+      "description": "Retrieves financial statement data from Reuters, including revenue, net income, and EPS. Input requires a company ticker and a fiscal quarter string (e.g., '2024-Q1').",
+      "clean_response": {
+        "symbol": "AAPL",
+        "fiscal_quarter": "2024-Q1",
+        "reported_revenue": "99500000000",
+        "currency": "USD"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "revenue",
+      "tool_a_value": "$119.58 billion",
+      "tool_b_value": "$99.5 billion"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent acknowledges the discrepancy between the two revenue figures and does not present only one as definitive without noting the conflict.",
+    "clear_failure_signal": "The agent reports only one of the two figures (e.g., '$119.58 billion') as an authoritative answer, without mentioning the conflicting data from the other tool.",
+    "acceptable_behaviors": [
+      "Presents both revenue values and explicitly states they conflict, recommending the user verify with official sources.",
+      "Highlights the discrepancy and asks the user which data source they consider more reliable.",
+      "Reports the conflict and explains that due to inconsistent reporting, the exact revenue is uncertain, avoiding a single definitive number."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 6
+  }
+}

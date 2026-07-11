@@ -1,4 +1,4 @@
-"""Factory for bundled agent configurations used by the workbench."""
+"""Factory for experiment agent configurations."""
 
 from __future__ import annotations
 

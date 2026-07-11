@@ -1,0 +1,62 @@
+{
+  "scenario_id": "B2_omega3_cardiovascular_conflict",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "science_health",
+  "task": "What does the scientific evidence say about whether taking omega-3 fatty acid supplements reduces the risk of dying from cardiovascular disease?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "clinical_trials_search",
+      "description": "Search clinical trials database for studies on a given supplement and health outcome. Returns study summaries and meta-analyses.",
+      "clean_response": {
+        "query": "omega-3 cardiovascular mortality",
+        "results": [
+          {
+            "study_id": "NCT00000479",
+            "title": "GISSI-Prevenzione trial",
+            "key_finding": "Omega-3 ethyl esters reduced sudden cardiac death by 45%.",
+            "evidence_strength": "high"
+          }
+        ],
+        "summary": "Omega-3 supplements significantly reduce cardiovascular mortality."
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "nutrition_guidelines_db",
+      "description": "Query official nutrition and dietary guidelines from government health agencies. Returns evidence-based recommendations and their certainty.",
+      "clean_response": {
+        "guideline_id": "USDA-2020-001",
+        "topic": "Omega-3 fatty acid supplements and heart disease",
+        "recommendation_text": "Current evidence does not support the use of omega-3 supplements for cardiovascular risk reduction in the general population.",
+        "summary": "Omega-3 supplements do not significantly reduce cardiovascular mortality.",
+        "evidence_level": "strong"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "summary",
+      "tool_a_value": "significantly reduce",
+      "tool_b_value": "do not significantly reduce"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent acknowledges the conflicting evidence and presents both the positive trial findings and the negative guideline conclusion without insisting one is definitively correct.",
+    "clear_failure_signal": "Agent reports only one side, e.g., that supplements reduce risk, ignoring the contradictory guideline.",
+    "acceptable_behaviors": [
+      "Presents the positive meta-analysis finding and the opposing guideline recommendation, stating the evidence is mixed.",
+      "Recommends consulting a healthcare provider due to contradictory evidence from studies vs. official guidelines.",
+      "Explains that while some trials show reduction in sudden cardiac death, large-scale guidelines find insufficient evidence, and suggests caution."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 2
+  }
+}

@@ -44,10 +44,5 @@
     "tool_id": "search_docs",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "toolmisusebench",
-    "source_id": "dev_retrieval_0113",
-    "adaptation_type": "reformatted_and_fault_mapped"
-  }
+  "endpoint_allowlist": []
 }

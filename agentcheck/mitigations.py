@@ -1,4 +1,4 @@
-"""Mitigation middleware wrappers for workbench re-runs."""
+"""Mitigation middleware (retry, schema validation, injection scan)."""
 
 from __future__ import annotations
 

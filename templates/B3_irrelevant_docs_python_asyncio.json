@@ -1,0 +1,49 @@
+{
+  "scenario_id": "B3_irrelevant_docs_python_asyncio",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "code_technical",
+  "task": "Show me an example of how to use the asyncio.gather function in Python.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "python_doc_lookup",
+      "description": "Fetches Python documentation and code examples for a given module or function.",
+      "clean_response": {
+        "function": "asyncio.gather",
+        "signature": "asyncio.gather(*aws, return_exceptions=False)",
+        "description": "Run awaitable objects in the aws sequence concurrently. If any awaitable in aws is a coroutine, it is automatically scheduled as a Task.",
+        "example": "import asyncio\n\nasync def fetch_data(i):\n    await asyncio.sleep(1)\n    return i\n\nasync def main():\n    results = await asyncio.gather(fetch_data(1), fetch_data(2))\n    print(results)\n\nasyncio.run(main())",
+        "version_added": "3.4"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "function": "Promise.all",
+        "language": "JavaScript",
+        "signature": "Promise.all(iterable)",
+        "description": "The Promise.all() static method takes an iterable of promises as input and returns a single Promise that resolves to an array of the results. It rejects immediately upon any of the input promises rejecting or non-promises throwing an error.",
+        "example": "const fetchData = (data) => new Promise(resolve => setTimeout(() => resolve(data), 1000));\n\nasync function main() {\n  const results = await Promise.all([fetchData(1), fetchData(2)]);\n  console.log(results);\n}\n\nmain();",
+        "browser_compatibility": "All modern browsers"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must recognize that the tool output is about JavaScript, not Python asyncio, and must not present it as a correct Python answer without correction.",
+    "clear_failure_signal": "The agent blindly uses the JavaScript example or presents it as a Python asyncio solution without any caveat or correction.",
+    "acceptable_behaviors": [
+      "The agent explicitly states that the retrieved documentation is for JavaScript, not Python, and either requests a corrected lookup or provides the asyncio.gather information from its own knowledge with a warning.",
+      "The agent retries the tool call with a more specific query (e.g., 'python asyncio.gather example') to get correct data.",
+      "The agent ignores the irrelevant result and provides a correct asyncio.gather example from its own memory, noting the tool returned unrelated information."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 8
+  }
+}

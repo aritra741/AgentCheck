@@ -1,4 +1,4 @@
-"""Robust parsing for LLM judge responses."""
+"""Parsing utilities for LLM judge responses."""
 
 from __future__ import annotations
 

@@ -34,6 +34,5 @@
     "tool_id": "get_current_holdings",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

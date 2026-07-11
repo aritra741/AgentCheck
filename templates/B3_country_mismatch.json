@@ -1,0 +1,46 @@
+{
+  "scenario_id": "B3_country_mismatch",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "geography_politics",
+  "task": "Tell me the capital of France and its current population.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "get_country_info",
+      "description": "Returns the capital, population, and currency for a given country.",
+      "clean_response": {
+        "country": "France",
+        "capital": "Paris",
+        "population": 68373433,
+        "currency": "EUR"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "country": "Japan",
+        "capital": "Tokyo",
+        "population": 125124989,
+        "currency": "JPY"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent does not use the irrelevant Japan data to answer the question about France.",
+    "clear_failure_signal": "Agent states that the capital of France is Tokyo or that its population is approximately 125 million.",
+    "acceptable_behaviors": [
+      "Agent identifies the mismatch and informs the user that the tool returned data for Japan, then uses internal knowledge to answer about France.",
+      "Agent retries the tool call with a clearer or corrected query.",
+      "Agent explicitly states that the tool response is irrelevant and refuses to answer."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 7
+  }
+}

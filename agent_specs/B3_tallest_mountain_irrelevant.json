@@ -36,6 +36,5 @@
     "tool_id": "facts_encyclopedia",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

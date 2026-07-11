@@ -39,10 +39,5 @@
   "endpoint_allowlist": [
     "https://api.agentql.com",
     "https://example.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "AgentQL_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

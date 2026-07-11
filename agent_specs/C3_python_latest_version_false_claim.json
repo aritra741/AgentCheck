@@ -35,6 +35,5 @@
     "tool_id": "python_docs_search",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

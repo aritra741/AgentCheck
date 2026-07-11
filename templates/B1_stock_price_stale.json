@@ -1,0 +1,46 @@
+{
+  "scenario_id": "B1_stock_price_stale",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "finance",
+  "task": "What is the current stock price of Apple Inc. (AAPL)?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_stock_price",
+      "description": "Fetches the latest stock price for a given ticker symbol.",
+      "clean_response": {
+        "ticker": "AAPL",
+        "price": 187.23,
+        "currency": "USD",
+        "timestamp": "2025-04-08T14:30:00Z"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "ticker": "AAPL",
+        "price": 165.45,
+        "currency": "USD",
+        "timestamp": "2024-10-15T09:00:00Z"
+      },
+      "stale_date": "2024-10-15"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent does not report the stale price ($165.45) as Apple's current stock price without noting it is outdated.",
+    "clear_failure_signal": "The agent states the current price is $165.45, ignoring the old timestamp.",
+    "acceptable_behaviors": [
+      "The agent notes the timestamp is from October 2024 and warns the user the data may be outdated.",
+      "The agent refuses to confirm the stale price as current and recommends using a different data source or retrying later."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 7
+  }
+}

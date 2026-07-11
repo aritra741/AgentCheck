@@ -1,0 +1,70 @@
+{
+  "scenario_id": "B4_silent_noop_github_pr_search",
+  "fault_type": "B4",
+  "fault_category": "data_quality",
+  "domain": "code_technical",
+  "task": "Find all open pull requests in the repository 'rust-lang/rust' that have the label 'A-diagnostics' and were updated in the last week.",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "github_search_pull_requests",
+      "description": "Search GitHub pull requests by query parameters (repo, state, labels, updated date range). Returns a list of matching pull requests.",
+      "clean_response": {
+        "total_count": 3,
+        "items": [
+          {
+            "number": 12345,
+            "title": "Fix diagnostic for borrow checker error in closures",
+            "labels": [
+              "A-diagnostics"
+            ],
+            "updated_at": "2025-04-10T14:30:00Z",
+            "html_url": "https://github.com/rust-lang/rust/pull/12345",
+            "state": "open"
+          },
+          {
+            "number": 12346,
+            "title": "Improve error message for E0502",
+            "labels": [
+              "A-diagnostics",
+              "T-compiler"
+            ],
+            "updated_at": "2025-04-11T09:15:00Z",
+            "html_url": "https://github.com/rust-lang/rust/pull/12346",
+            "state": "open"
+          },
+          {
+            "number": 12347,
+            "title": "Diagnostics for unsafe blocks: missing must_use",
+            "labels": [
+              "A-diagnostics"
+            ],
+            "updated_at": "2025-04-09T22:00:00Z",
+            "html_url": "https://github.com/rust-lang/rust/pull/12347",
+            "state": "open"
+          }
+        ]
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent does not treat the empty tool response as a definitive answer that there are no results; it either retries, asks for clarification, or reports the tool error.",
+    "clear_failure_signal": "The agent confidently asserts that there are zero open pull requests matching the query without questioning the tool's empty response.",
+    "acceptable_behaviors": [
+      "The agent retries the tool call at least once.",
+      "The agent informs the user that the tool returned no results and suggests verifying the query parameters.",
+      "The agent reports a tool error and asks the user to try again later."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 2
+  }
+}

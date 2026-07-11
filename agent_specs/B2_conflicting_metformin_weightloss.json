@@ -54,6 +54,5 @@
     "tool_id": "clinical_trial_registry",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

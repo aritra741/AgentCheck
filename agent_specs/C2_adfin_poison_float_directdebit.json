@@ -31,10 +31,5 @@
   },
   "endpoint_allowlist": [
     "https://adfin-api.example.com/v1"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "AdFin_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

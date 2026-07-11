@@ -41,10 +41,5 @@
     "tool_id": "update_account",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "toolmisusebench",
-    "source_id": "dev_crud_0112",
-    "adaptation_type": "reformatted_and_fault_mapped"
-  }
+  "endpoint_allowlist": []
 }

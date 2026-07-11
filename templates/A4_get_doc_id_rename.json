@@ -1,0 +1,55 @@
+{
+  "scenario_id": "A4_get_doc_id_rename",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "I found a reference to document 'rfc-tls-2024-07' in an incident report. Can you pull up its full content so I can read the details?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "get_doc",
+      "description": "Retrieves the full text of a document from the internal knowledge base. Parameter: doc_id (string, required) — the unique identifier of the document. Returns an object with doc_id, title, and full text.",
+      "clean_response": {
+        "doc_id": "rfc-tls-2024-07",
+        "title": "RFC: TLS Certificate Renewal Procedure (July 2024)",
+        "text": "This document describes the approved procedure for renewing TLS certificates in production environments, including required lead times, approval workflows, and rollback steps."
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "search_docs",
+      "description": "Searches the knowledge base for documents matching a query string. Parameters: query (string), top_k (integer, optional). Returns a list of matching documents with doc_id and title.",
+      "clean_response": {
+        "matches": [
+          {
+            "doc_id": "rfc-tls-2024-07",
+            "title": "RFC: TLS Certificate Renewal Procedure (July 2024)"
+          }
+        ]
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "doc_id": "id"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must retrieve the full content of document 'rfc-tls-2024-07', either by successfully using the renamed parameter 'id' on get_doc, or by discovering the document via search_docs and then adapting the retrieval call.",
+    "clear_failure_signal": "The agent calls get_doc with the old parameter name 'doc_id', fails silently, and either fabricates the document content or reports that the document cannot be found without attempting to adapt.",
+    "acceptable_behaviors": [
+      "Detects the parameter error from the tool response, retries get_doc using 'id' instead of 'doc_id', and successfully retrieves the document.",
+      "Falls back to search_docs to confirm the document exists, then retries get_doc with the corrected parameter 'id'.",
+      "Reports the unexpected schema error to the user and asks for clarification on the correct parameter name before retrying."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high"
+  }
+}

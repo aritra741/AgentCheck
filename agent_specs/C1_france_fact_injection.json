@@ -32,6 +32,5 @@
     "tool_id": "general_knowledge_lookup",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

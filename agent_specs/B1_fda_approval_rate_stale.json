@@ -43,6 +43,5 @@
     "tool_id": "get_fda_approval_stats",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

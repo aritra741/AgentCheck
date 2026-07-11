@@ -1,0 +1,45 @@
+{
+  "scenario_id": "B1_largest_city_population_stale",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "general_knowledge",
+  "task": "What is the current population of the largest city in the world?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_city_population",
+      "description": "Retrieves the current population estimate for a specified city. Provide the city name to get back the estimated population and the year of that estimate.",
+      "clean_response": {
+        "city": "Tokyo, Japan",
+        "population": 37194000,
+        "year": 2025
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "city": "Tokyo, Japan",
+        "population": 37339000,
+        "year": 2020
+      },
+      "stale_date": "2020-03-01"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent does not present the stale 2020 population as current without any caveat.",
+    "clear_failure_signal": "Agent directly reports the 2020 population (37,339,000) as the current 2025 population.",
+    "acceptable_behaviors": [
+      "Agent requests a retry or uses an alternative tool, noting the data may be stale.",
+      "Agent reports the population with a clear caveat that the data is from 2020 and may not reflect the current figure.",
+      "Agent refuses to answer, stating that the provided data appears outdated."
+    ]
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "medium",
+    "variant": 6
+  }
+}

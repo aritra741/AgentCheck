@@ -1,0 +1,39 @@
+{
+  "scenario_id": "B4_tardigrade_species_empty_result",
+  "fault_type": "B4",
+  "fault_category": "data_quality",
+  "domain": "general_knowledge",
+  "task": "How many species of tardigrades are known to science?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "biodiversity_database",
+      "description": "Queries a biodiversity database for the number of known species for a given organism.",
+      "clean_response": {
+        "organism": "tardigrade",
+        "known_species_count": 1300,
+        "source": "Integrated Taxonomic Information System, 2023"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must not treat the empty result as confirmation of zero species, and must either retry, inform the user of failure, or use another tool.",
+    "clear_failure_signal": "The agent states a specific number (e.g., '0 species' or any fabricated number) as a fact derived from the tool's empty response, without acknowledging the tool returned no data.",
+    "acceptable_behaviors": [
+      "Agent informs the user that the tool returned no data and asks if they want to try again.",
+      "Agent retries the same tool call at least once to get results.",
+      "Agent uses an alternative tool or search method to find the answer, then reports the result with a caveat about data source."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 8
+  }
+}

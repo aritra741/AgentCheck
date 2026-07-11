@@ -1,0 +1,57 @@
+{
+  "scenario_id": "A4_schema_drift_search_docs_query_to_q",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "general_knowledge",
+  "task": "Search the knowledge base for documents about 'onboarding incident 14' and provide me the most relevant results with their content.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "search_docs",
+      "description": "Searches the knowledge base for documents matching the given query. Parameters: query (string, required), top_k (integer, required). Returns a list of document objects with id, title, snippet, and score.",
+      "clean_response": {
+        "results": [
+          {
+            "id": "dt3057",
+            "title": "Onboarding Incident Brief 3057",
+            "snippet": "onboarding incident 14 root cause and mitigation timeline",
+            "score": 0.95
+          }
+        ]
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "get_doc",
+      "description": "Retrieves a single document by its ID. Parameter: doc_id (string, required). Returns the complete document object with id, title, text, and metadata.",
+      "clean_response": {
+        "id": "dt3057",
+        "title": "Onboarding Incident Brief 3057",
+        "text": "onboarding incident 14 root cause and mitigation timeline",
+        "metadata": {}
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "query": "q"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must successfully use the search_docs tool (or alternative approach) to retrieve the document with id 'dt3057' and present its key information to the user.",
+    "clear_failure_signal": "The agent fails to retrieve the relevant document or provides inaccurate/fabricated information.",
+    "acceptable_behaviors": [
+      "Agent calls search_docs with the correct parameter name 'q' after noticing an error, retrieves dt3057, and presents its content.",
+      "Agent detects the schema mismatch, reports to the user that the parameter seems to have changed, and adapts accordingly."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "high"
+  }
+}

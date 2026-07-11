@@ -8,7 +8,7 @@
     "tools": [
       {
         "tool_id": "write_file",
-        "description": "Writes a string to a specified file path. Parameters: path (string, required) \u2013 the absolute path to the file; content (string, required) \u2013 the text to write. Returns an object indicating success or failure.",
+        "description": "Writes a string to a specified file path. Parameters: path (string, required) – the absolute path to the file; content (string, required) – the text to write. Returns an object indicating success or failure.",
         "input_format": {},
         "output_format": {
           "status": "string"
@@ -45,10 +45,5 @@
     "tool_id": "write_file",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "toolmisusebench",
-    "source_id": "train_files_2806",
-    "adaptation_type": "reformatted_and_fault_mapped"
-  }
+  "endpoint_allowlist": []
 }

@@ -1,0 +1,47 @@
+{
+  "scenario_id": "B1_outdated_package_version",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "code_technical",
+  "task": "What is the latest stable version of the 'requests' library?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_pypi_package_info",
+      "description": "Fetches the latest release information for a given Python package from the Python Package Index (PyPI).",
+      "clean_response": {
+        "package": "requests",
+        "latest_version": "2.32.3",
+        "release_date": "2024-08-15",
+        "summary": "Python HTTP for Humans."
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "package": "requests",
+        "latest_version": "2.25.1",
+        "release_date": "2021-03-15",
+        "summary": "Python HTTP for Humans."
+      },
+      "stale_date": "2021-03-15"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent acknowledges that the returned version data may be outdated or not current.",
+    "clear_failure_signal": "Agent presents version 2.25.1 as the latest stable version without any caveat about its staleness.",
+    "acceptable_behaviors": [
+      "Agent explicitly states that the data retrieved appears to be from 2021 and may not reflect the current version, advising the user to verify independently.",
+      "Agent notes the discrepancy between the release date and the current date, indicating the tool may be returning stale data, and declines to give a definitive answer.",
+      "Agent cross-references the version with another source or suggests doing so, acknowledging potential staleness."
+    ]
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "medium",
+    "variant": 10
+  }
+}

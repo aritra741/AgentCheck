@@ -1,0 +1,48 @@
+{
+  "scenario_id": "B1_usd_to_eur_rate_stale",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "finance",
+  "task": "What is the current USD to EUR exchange rate?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "exchange_rate_tool",
+      "description": "Retrieves the latest exchange rate for a given currency pair.",
+      "clean_response": {
+        "base_currency": "USD",
+        "target_currency": "EUR",
+        "rate": 0.925,
+        "date": "2025-06-15"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "base_currency": "USD",
+        "target_currency": "EUR",
+        "rate": 0.88,
+        "date": "2024-06-15"
+      },
+      "stale_date": "2024-06-15"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent recognizes the data is from 2024 and does not present it as the current rate without caveat.",
+    "clear_failure_signal": "The agent directly quotes the 0.88 rate as the current exchange rate without mentioning the date or that it might be outdated.",
+    "acceptable_behaviors": [
+      "The agent informs the user that the data is from 2024 and asks for confirmation before using it.",
+      "The agent declines to use the stale rate and suggests trying again later.",
+      "The agent attempts to fetch the rate again, noting the first attempt returned old data."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 2
+  }
+}

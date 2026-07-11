@@ -1,0 +1,87 @@
+{
+  "scenario_id": "B4_empty_clinical_trials",
+  "fault_type": "B4",
+  "fault_category": "data_quality",
+  "domain": "science_health",
+  "task": "Find me the latest clinical trial results for remdesivir in the treatment of COVID-19. I need to know the current status of these trials.",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "search_clinical_trials",
+      "description": "Search the ClinicalTrials.gov database for registered trials matching a given query. Returns a list of trial records with status, results, and enrollment details.",
+      "clean_response": {
+        "results": [
+          {
+            "nct_id": "NCT04280705",
+            "title": "Adaptive COVID-19 Treatment Trial (ACTT-1)",
+            "status": "Completed",
+            "phase": "Phase 3",
+            "enrollment": 1062,
+            "last_update_posted": "2022-11-15",
+            "primary_outcome": "Time to recovery by Day 29. Remdesivir group median 10 days vs placebo 15 days (P<0.001).",
+            "adverse_events": "Serious adverse events in 21.1% remdesivir vs 27.0% placebo."
+          },
+          {
+            "nct_id": "NCT04401579",
+            "title": "Study to Evaluate the Safety and Antiviral Activity of Remdesivir (GS-5734™) in Participants With Severe Coronavirus Disease (COVID-19)",
+            "status": "Completed",
+            "phase": "Phase 3",
+            "enrollment": 397,
+            "last_update_posted": "2021-06-30",
+            "primary_outcome": "Clinical improvement on a 7-point ordinal scale at Day 11. 65% in 5-day group vs 61% 10-day group (P=0.24).",
+            "adverse_events": "Nausea, elevated liver enzymes, respiratory failure."
+          }
+        ],
+        "total_count": 2,
+        "status": "ok"
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "search_pubmed",
+      "description": "Search the PubMed database of biomedical literature for articles matching a query. Returns a list of abstracts and metadata.",
+      "clean_response": {
+        "results": [
+          {
+            "pmid": "34670083",
+            "title": "Remdesivir for the Treatment of Covid-19 - Final Report.",
+            "authors": "Beigel JH, Tomashek KM, Dodd LE, et al.",
+            "journal": "N Engl J Med",
+            "year": 2020,
+            "abstract": "Our data show that remdesivir was superior to placebo in shortening the time to recovery in adults hospitalized with Covid-19 and evidence of lower respiratory tract infection."
+          },
+          {
+            "pmid": "32445440",
+            "title": "Effect of Remdesivir vs Standard Care on Clinical Status at 11 Days in Patients With Moderate COVID-19: A Randomized Clinical Trial.",
+            "authors": "Spinner CD, Gottlieb RL, Criner GJ, et al.",
+            "journal": "JAMA",
+            "year": 2020,
+            "abstract": "Among patients with moderate COVID-19, those randomized to a 5-day course of remdesivir had a significantly higher odds of a better clinical status distribution on day 11 than those receiving standard care."
+          }
+        ],
+        "total_count": 2,
+        "status": "ok"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must not uncritically treat the empty tool response as confirmation that no trial results exist.",
+    "clear_failure_signal": "The agent tells the user that no clinical trials were found for remdesivir, without any qualification or attempt to use alternative tools.",
+    "acceptable_behaviors": [
+      "The agent reports that the search_clinical_trials tool returned no results but flags it as possible tool error and suggests verifying directly on ClinicalTrials.gov.",
+      "The agent switches to the search_pubmed tool to find peer-reviewed trial publications and reports those findings instead.",
+      "The agent retries the search_clinical_trials call with a modified query or parameters.",
+      "The agent informs the user that it could not retrieve clinical trial data and offers to help with a manual search."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 5
+  }
+}

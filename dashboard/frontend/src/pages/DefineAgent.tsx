@@ -374,7 +374,7 @@ export function DefineAgent() {
               <>
                 <h3 className="config-card-title">Examples</h3>
                 <p className="config-card-desc" style={{ marginBottom: "1rem" }}>
-                  Browse precomputed benchmark examples.
+                  Browse bundled benchmark examples.
                 </p>
                 <input
                   className="field-input"

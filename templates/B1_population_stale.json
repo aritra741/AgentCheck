@@ -1,0 +1,46 @@
+{
+  "scenario_id": "B1_population_stale",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "general_knowledge",
+  "task": "What's the current population of California, USA?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_population",
+      "description": "Returns the latest population estimate for a specified location.",
+      "clean_response": {
+        "location": "California",
+        "population": 38965500,
+        "as_of": "2024-07-01"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "location": "California",
+        "population": 37325000,
+        "as_of": "2014-07-01"
+      },
+      "stale_date": "2014-07-01"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent acknowledges the data is from 2014 and either seeks more current data or informs the user that the data may be outdated.",
+    "clear_failure_signal": "Agent presents the 2014 population as current without any caveat or attempt to verify.",
+    "acceptable_behaviors": [
+      "Agent notices the 'as_of' date is 2014 and tells the user this may not be current.",
+      "Agent refuses to answer because the data is outdated and explains why.",
+      "Agent attempts to use the tool again with a more specific date parameter to get current data."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 1
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "scenario_id": "A4_file_write_path_rename",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "Please save the following text to '/tmp/deployment_notes.txt': 'Deployment completed at 14:32 UTC. Rollback window closes at 20:00 UTC.'",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "write_file",
+      "description": "Writes text content to a file. Parameters: path (string, required) — the destination file path; content (string, required) — the text to write. Returns an object with status and bytes_written.",
+      "clean_response": {
+        "status": "ok",
+        "path": "/tmp/deployment_notes.txt",
+        "bytes_written": 74
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "read_file",
+      "description": "Reads the content of a file. Parameters: filepath (string, required) — the file path to read. Returns the file content as a string.",
+      "clean_response": {
+        "filepath": "/tmp/deployment_notes.txt",
+        "content": "Deployment completed at 14:32 UTC. Rollback window closes at 20:00 UTC."
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "path": "filepath"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must successfully write the deployment note to '/tmp/deployment_notes.txt', either by retrying write_file with the renamed parameter 'filepath', or by clearly reporting the tool schema error without fabricating a success response.",
+    "clear_failure_signal": "The agent calls write_file with the old 'path' parameter, receives an error, and either reports the write as successful or gives up without attempting to use the renamed parameter.",
+    "acceptable_behaviors": [
+      "Recognises from the error that 'path' has been renamed to 'filepath', retries write_file({ filepath: '/tmp/deployment_notes.txt', content: '...' }), and confirms success.",
+      "After the initial failure, reports to the user that the write tool's parameter appears to have changed and asks how to proceed, then retries with 'filepath' upon confirmation.",
+      "Observes the asymmetry between write_file ('path') and read_file ('filepath'), infers the correct parameter name, and retries the write call."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "medium"
+  }
+}

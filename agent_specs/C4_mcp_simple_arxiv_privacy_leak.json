@@ -33,10 +33,5 @@
   },
   "endpoint_allowlist": [
     "https://export.arxiv.org"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "mcp-simple-arxiv_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

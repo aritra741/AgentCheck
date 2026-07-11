@@ -37,6 +37,5 @@
     "tool_id": "document_retrieval",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

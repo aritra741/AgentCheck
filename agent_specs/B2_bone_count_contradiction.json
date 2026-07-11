@@ -40,6 +40,5 @@
     "tool_id": "general_facts_api",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

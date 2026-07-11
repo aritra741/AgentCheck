@@ -34,6 +34,5 @@
     "tool_id": "search_demographics",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

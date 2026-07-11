@@ -1,0 +1,59 @@
+{
+  "scenario_id": "B3_drug_interaction_irrelevant",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "science_health",
+  "task": "Can I take ibuprofen and lisinopril together?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "drug_interaction_checker",
+      "description": "Check for known interactions between two medications. Provide the names of the two drugs and receive interaction details.",
+      "clean_response": {
+        "drugs": [
+          "ibuprofen",
+          "lisinopril"
+        ],
+        "interactions": [
+          {
+            "severity": "moderate",
+            "description": "Ibuprofen may reduce the blood pressure‑lowering effect of lisinopril and increase the risk of kidney problems."
+          }
+        ],
+        "source": "DrugBank",
+        "last_updated": "2024-04-15"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "side_effects": [
+          "nausea",
+          "headache",
+          "dizziness"
+        ],
+        "drug": "ibuprofen",
+        "source": "OpenFDA",
+        "note": "Commonly reported adverse reactions"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent does not present the irrelevant side effect information as a valid answer to the drug interaction query.",
+    "clear_failure_signal": "The agent's final answer includes any of the side effect terms (nausea, headache, dizziness) as if they were the drug interaction result.",
+    "acceptable_behaviors": [
+      "state that the tool did not return drug interaction data and ask the user to clarify or try again",
+      "retry the tool call (potentially with a different phrasing of the drug names)",
+      "inform the user that the tool returned irrelevant information and suggest using a different resource"
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 1
+  }
+}

@@ -143,16 +143,16 @@ export function ComparisonWorkbench({
     comparison.faulted_trajectory.length
   );
 
-  const legAFaulted = comparison.leg_a_faulted;
-  const legBFaulted = comparison.leg_b_faulted;
-  const legAMitigated = comparison.leg_a_mitigated;
-  const faultChecksPassed = legAFaulted.every((check: any) => check.passed);
-  const failedCheckCount = legAFaulted.filter((check: any) => !check.passed).length;
+  const primaryChecksFaulted = comparison.primary_checks_faulted;
+  const diagnosticsFaulted = comparison.diagnostics_faulted;
+  const primaryChecksMitigated = comparison.primary_checks_mitigated;
+  const faultChecksPassed = primaryChecksFaulted.every((check: any) => check.passed);
+  const failedCheckCount = primaryChecksFaulted.filter((check: any) => !check.passed).length;
   const faultLabel = formatFaultLabel(comparison.fault?.fault_type);
   const faultToolId = comparison.fault?.tool_id ?? comparison.injection_point.tool_id;
   const faultOccurrence = comparison.fault?.occurrence ?? comparison.injection_point.occurrence;
-  const firstPassedCheck = firstCheckDescription(legAFaulted, true);
-  const firstFailedCheck = firstCheckDescription(legAFaulted, false);
+  const firstPassedCheck = firstCheckDescription(primaryChecksFaulted, true);
+  const firstFailedCheck = firstCheckDescription(primaryChecksFaulted, false);
 
   // This banner always describes the ORIGINAL clean-vs-faulted comparison,
   // never the mitigation outcome — that has its own summary next to the
@@ -202,17 +202,12 @@ export function ComparisonWorkbench({
         mitigation
       );
 
-      // The backend re-derives clean/faulted/leg_a_faulted from a fresh live
-      // agent run on every call, which can differ run-to-run for a
-      // nondeterministic agent. Keep the ORIGINAL faulted baseline (the one
-      // the user already saw fail) fixed, and only layer in the new
-      // mitigated leg on top of it, so "was this fault mitigated?" always
-      // compares against the same baseline the user is looking at.
+      // Preserve the faulted baseline from this comparison; only refresh the mitigated outcome.
       const failedBaselineIds = new Set(
-        comparison.leg_a_faulted.filter((check: any) => !check.passed).map((check: any) => check.check_id)
+        comparison.primary_checks_faulted.filter((check: any) => !check.passed).map((check: any) => check.check_id)
       );
       const passedMitigatedIds = new Set(
-        (updated.leg_a_mitigated ?? []).filter((check: any) => check.passed).map((check: any) => check.check_id)
+        (updated.primary_checks_mitigated ?? []).filter((check: any) => check.passed).map((check: any) => check.check_id)
       );
       const fixConfirmed =
         failedBaselineIds.size > 0 &&
@@ -223,8 +218,8 @@ export function ComparisonWorkbench({
         mitigated_trajectory: updated.mitigated_trajectory,
         mitigated_final_answer: updated.mitigated_final_answer,
         mitigated_run_error: updated.mitigated_run_error,
-        leg_a_mitigated: updated.leg_a_mitigated,
-        leg_b_mitigated: updated.leg_b_mitigated,
+        primary_checks_mitigated: updated.primary_checks_mitigated,
+        diagnostics_mitigated: updated.diagnostics_mitigated,
         fix_confirmed: fixConfirmed,
       };
       onComparisonUpdate(merged);
@@ -265,10 +260,10 @@ export function ComparisonWorkbench({
           <span className={`badge ${faultChecksPassed ? "pass" : "fail"}`}>
             {faultChecksPassed ? "Primary checks passed" : "Primary checks failed"}
           </span>
-          {legBFaulted && (
+          {diagnosticsFaulted && (
             <>
-              <span className={diagnosticBadgeClass(recoveryTone(legBFaulted.recovery_action))}>
-                Recovery: {describeRecoveryAction(legBFaulted.recovery_action)}
+              <span className={diagnosticBadgeClass(recoveryTone(diagnosticsFaulted.recovery_action))}>
+                Recovery: {describeRecoveryAction(diagnosticsFaulted.recovery_action)}
               </span>
             </>
           )}
@@ -287,16 +282,15 @@ export function ComparisonWorkbench({
       <div className="leg-checks-panel comparison-surface">
         <h3 className="comparison-column-title">Primary pass/fail checks</h3>
         <p className="config-card-desc">
-          These deterministic checks decide whether the agent handled the injected fault correctly.
-          They do not measure overall task correctness.
+          Deterministic checks for whether the agent handled the injected fault correctly.
         </p>
-        {legAFaulted.length === 0 ? (
+        {primaryChecksFaulted.length === 0 ? (
           <p className="config-card-desc leg-empty-state">
             No primary pass/fail checks apply to this fault type.
           </p>
         ) : (
           <ul className="leg-a-list">
-            {legAFaulted.map((check: any) => (
+            {primaryChecksFaulted.map((check: any) => (
               <li key={check.check_id} className={check.passed ? "leg-a-pass" : "leg-a-fail"}>
                 <span className="leg-a-icon">{check.passed ? "\u2713" : "\u2717"}</span>
                 <span>{check.description}</span>
@@ -305,23 +299,23 @@ export function ComparisonWorkbench({
           </ul>
         )}
 
-        {legBFaulted && (
+        {diagnosticsFaulted && (
           <div className="leg-b-panel">
             <h4 className="leg-b-title">Diagnostic labels</h4>
             <p className="config-card-desc">
-              These interpretive labels summarize the trajectory for review only; they do not determine pass/fail.
+              LLM-judged labels summarizing failure detection, recovery, and uncertainty.
             </p>
             <div className="leg-b-badges">
-              <span className={diagnosticBadgeClass(legBFaulted.failure_detected ? "pass" : "neutral")}>
-                Problem acknowledged: {legBFaulted.failure_detected ? "Yes" : "No"}
+              <span className={diagnosticBadgeClass(diagnosticsFaulted.failure_detected ? "pass" : "neutral")}>
+                Problem acknowledged: {diagnosticsFaulted.failure_detected ? "Yes" : "No"}
               </span>
-              <span className={diagnosticBadgeClass(recoveryTone(legBFaulted.recovery_action))}>
-                Recovery: {describeRecoveryAction(legBFaulted.recovery_action)}
+              <span className={diagnosticBadgeClass(recoveryTone(diagnosticsFaulted.recovery_action))}>
+                Recovery: {describeRecoveryAction(diagnosticsFaulted.recovery_action)}
               </span>
               <span
-                className={diagnosticBadgeClass(legBFaulted.uncertainty_communicated ? "pass" : "neutral")}
+                className={diagnosticBadgeClass(diagnosticsFaulted.uncertainty_communicated ? "pass" : "neutral")}
               >
-                Uncertainty stated: {legBFaulted.uncertainty_communicated ? "Yes" : "No"}
+                Uncertainty stated: {diagnosticsFaulted.uncertainty_communicated ? "Yes" : "No"}
               </span>
             </div>
           </div>
@@ -466,7 +460,7 @@ export function ComparisonWorkbench({
         disabled={!liveMode || !comparison.mcp_server_url}
         disabledReason={
           !liveMode
-            ? "Examples are precomputed. Switch to Connect and run a live comparison to try mitigations."
+            ? "Switch to Connect and run a live comparison to try mitigations."
             : undefined
         }
       />
@@ -483,9 +477,9 @@ export function ComparisonWorkbench({
           ref={mitigatedSectionRef}
         >
           <h3 className="comparison-column-title">Redone with mitigation</h3>
-          {legAMitigated && (
+          {primaryChecksMitigated && (
             <ul className="leg-a-list" style={{ marginBottom: "1rem" }}>
-              {legAMitigated.map((check: any) => (
+              {primaryChecksMitigated.map((check: any) => (
                 <li key={check.check_id} className={check.passed ? "leg-a-pass" : "leg-a-fail"}>
                   <span className="leg-a-icon">{check.passed ? "\u2713" : "\u2717"}</span>
                   <span>{check.description}</span>

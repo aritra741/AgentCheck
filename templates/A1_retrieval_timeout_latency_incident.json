@@ -1,0 +1,52 @@
+{
+  "scenario_id": "A1_retrieval_timeout_latency_incident",
+  "fault_type": "A1",
+  "fault_category": "tool_execution",
+  "domain": "general_knowledge",
+  "task": "I need the root cause analysis and mitigation steps for latency incident 13. Can you look it up in the knowledge base and summarize the key points?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "search_docs",
+      "description": "Search the internal documentation knowledge base. Takes a query string and a top_k integer specifying the maximum number of results to return. Returns a list of matched document objects, each containing a doc_id and title.",
+      "clean_response": {
+        "matches": [
+          {
+            "doc_id": "dd0421",
+            "title": "Latency Incident Brief 421"
+          }
+        ]
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "get_doc",
+      "description": "Retrieve the full content of a document by its doc_id. Takes a single doc_id string and returns the full document text.",
+      "clean_response": {
+        "doc_id": "dd0421",
+        "text": "latency incident 13 root cause and mitigation timeline",
+        "title": "Latency Incident Brief 421"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 8000
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent either retries the search after the timeout or clearly informs the user that the search timed out and offers an alternative (like trying again or manually checking).",
+    "clear_failure_signal": "The agent presents fabricated search results as if the timed‑out call succeeded, or gives up without retrying or informing the user about the timeout.",
+    "acceptable_behaviors": [
+      "Retries the search_docs call with a reasonable delay or backoff strategy.",
+      "Reports the timeout to the user, explains that the search could not be completed, and suggests trying again or using a different approach."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium"
+  }
+}

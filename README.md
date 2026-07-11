@@ -1,61 +1,50 @@
 # AgentCheck
 
-AgentCheck is an **MCP fault-injection workbench** for tool-using LLM agents.
+Code and artifacts for **AgentCheck: A Reproduce–Intervene–Mitigate Workbench for LLM Agents over MCP**.
 
-It connects to an MCP server (or uses bundled examples), runs a clean agent execution, replays the same run while injecting exactly one tool-response fault, scores how the agent handled the fault, and optionally re-runs with mitigations to confirm whether a fix closes the failure.
+AgentCheck connects to an MCP server (or uses bundled examples), runs a clean agent execution, replays the same run while injecting exactly one tool-response fault, scores how the agent handled the fault, and optionally re-runs with mitigations to confirm whether a fix closes the failure.
 
-## What this package includes
+## Layout
 
-This distribution contains only what is needed to **run the workbench**:
-
-- `agentcheck/`: comparison engine, fault injection, Leg A / Leg B scoring
-- `dashboard/`: FastAPI backend + React frontend
-- `agent_specs/`: bundled example specs (120-scenario suite)
-- `dashboard/seed/agentcheck.db`: precomputed comparisons for **Explore examples**
-- `pipeline/llm.py`: LLM client used by diagnostic scoring
-
-It does **not** include paper sources, experiment runners, evaluation results, annotation data, scenario-authoring tooling, or deployment configs.
-
-## Features
-
-1. **Connect an MCP server**: live clean vs. faulted comparison against your own tools
-2. **Explore bundled examples**: browse precomputed comparisons with no live model calls
-3. **Primary pass/fail checks** (Leg A) plus **diagnostic labels** (Leg B: failure detection, recovery, uncertainty)
-4. **Mitigation re-run** with `fix_confirmed` when failed checks close
+- `agentcheck/` — comparison engine, fault injection, deterministic pass/fail scoring, LLM-judge diagnostics
+- `dashboard/` — FastAPI backend + React frontend
+- `agent_specs/` — bundled example specs
+- `templates/` — 120-scenario suite
+- `experiments/` — experiment runners + annotation UI
+- `results/` — experiment outputs
+- `dashboard/seed/agentcheck.db` — precomputed comparisons for **Explore examples**
 
 ## Setup
 
-### Python
-
 ```bash
-cd AgentCheck-reviewer
+cd AgentCheck
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
 pip install -r dashboard/requirements.txt
 cp .env.example .env
-# Edit .env and add at least one model API key for live runs
+# Edit .env — see that file for workbench keys and multi-model experiment keys
 ```
 
-### Frontend (development mode)
+Frontend (development mode):
 
 ```bash
 cd dashboard/frontend
 npm install
 ```
 
-## Running
+## Running the workbench
 
-### Development (recommended)
+### Development
 
-Terminal 1 (backend):
+Terminal 1 — backend:
 
 ```bash
 source .venv/bin/activate
 PYTHONPATH=. uvicorn dashboard.api.main:app --reload --port 8000
 ```
 
-Terminal 2 (frontend):
+Terminal 2 — frontend:
 
 ```bash
 cd dashboard/frontend
@@ -64,35 +53,59 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-### Single-server (uses prebuilt `dashboard/frontend/dist` if present)
+### Single-server
 
 ```bash
 source .venv/bin/activate
-# Optional: rebuild the UI
-# cd dashboard/frontend && npm install && npm run build && cd ../..
 PYTHONPATH=. uvicorn dashboard.api.main:app --port 8000
 ```
 
-Open [http://localhost:8000](http://localhost:8000).
+Open [http://localhost:8000](http://localhost:8000). **Explore examples** works from the seed database without API keys.
 
-The backend copies `dashboard/seed/agentcheck.db` into place automatically on startup so **Explore examples** works out of the box.
+## Experiments and results
+
+| Results dir | Study |
+|-------------|-------|
+| `results/injection_validation/` | Injection validation |
+| `results/fixed_response_repeatability/` | Fixed-response repeatability |
+| `results/judge_repeatability/` | Judge repeatability |
+| `results/comparative_profiling/` | Comparative agent profiling |
+| `results/mitigation_impact/` | Mitigation impact |
+
+The suite is **120** scenarios (10 per fault type). Experiment runners use `evaluate.py` (MCP comparison → deterministic fault-handling checks → optional LLM judge). Summaries live in each results directory as `summary.json`.
+
+### Annotation UI
+
+Self-contained HTML annotator (no server):
+
+```bash
+open experiments/annotation_ui.html
+```
+
+Regenerate from injection-validation traces:
+
+```bash
+python experiments/export_annotation_ui.py --html-only
+```
+
+### Re-run experiments
+
+Requires API keys (see `.env.example`). Comparative profiling and mitigation impact need keys for every agent you run:
+
+```bash
+python experiments/run_injection_validation.py
+python experiments/run_fixed_response_repeatability.py
+python experiments/run_judge_repeatability.py
+python experiments/run_comparative_profiling.py
+python experiments/run_mitigation_impact.py
+```
+
+Default judge model is `claude-haiku-4-5-20251001`. Use `--no-judge` for deterministic pass/fail without diagnostic labels.
 
 ## Environment variables
 
-Copy `.env.example` to `.env`. Live **Connect** runs need a provider key, for example:
+Copy `.env.example` to `.env` and fill in keys. Live workbench runs need `OPENAI_API_KEY` (agent) and `ANTHROPIC_API_KEY` (Claude judge). Multi-agent experiment re-runs also need provider keys for Gemini, DeepSeek, and Llama — see `.env.example`.
 
-```bash
-OPENAI_API_KEY=...
-# or OPENROUTER_API_KEY / DEEPSEEK_API_KEY / GOOGLE_API_KEY
-```
+## License
 
-**Explore examples** works from the seed database without API keys.
-
-## API surface
-
-| Route | Purpose |
-|-------|---------|
-| `POST /api/run` | Live clean / faulted / mitigated comparison |
-| `GET /api/examples` | List bundled examples |
-| `GET /api/examples/{id}` | Load a bundled example + precomputed comparison |
-| `GET/POST /mcp` | Built-in demo MCP server |
+MIT — see [LICENSE](LICENSE).

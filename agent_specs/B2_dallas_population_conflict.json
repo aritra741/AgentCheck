@@ -46,6 +46,5 @@
     "tool_id": "us_census_bureau_api",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

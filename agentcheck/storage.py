@@ -112,7 +112,7 @@ def save_comparison(
     """Persist a completed controlled comparison (clean/faulted/mitigated + scoring).
 
     ``comparison`` is expected to be a plain, JSON-serializable dict containing
-    the trajectories, divergence, Leg A/Leg B results, and optional mitigation
+    the trajectories, divergence, pass/fail and diagnostic scoring results, and optional mitigation
     outcome for one bundled or live workbench comparison.
     """
     with _db_lock:
@@ -139,12 +139,34 @@ def save_comparison(
                     if comparison.get("mitigated_trajectory") is not None
                     else None,
                     json.dumps(comparison.get("divergence")),
-                    json.dumps(comparison.get("leg_a_faulted", comparison.get("leg_a"))),
-                    json.dumps(comparison.get("leg_b_faulted", comparison.get("leg_b"))),
-                    json.dumps(comparison.get("leg_a_faulted", comparison.get("leg_a"))),
-                    json.dumps(comparison.get("leg_b_faulted", comparison.get("leg_b"))),
-                    json.dumps(comparison.get("leg_a_mitigated")),
-                    json.dumps(comparison.get("leg_b_mitigated")),
+                    json.dumps(
+                        comparison.get("primary_checks_faulted")
+                        or comparison.get("leg_a_faulted")
+                        or comparison.get("leg_a")
+                    ),
+                    json.dumps(
+                        comparison.get("diagnostics_faulted")
+                        or comparison.get("leg_b_faulted")
+                        or comparison.get("leg_b")
+                    ),
+                    json.dumps(
+                        comparison.get("primary_checks_faulted")
+                        or comparison.get("leg_a_faulted")
+                        or comparison.get("leg_a")
+                    ),
+                    json.dumps(
+                        comparison.get("diagnostics_faulted")
+                        or comparison.get("leg_b_faulted")
+                        or comparison.get("leg_b")
+                    ),
+                    json.dumps(
+                        comparison.get("primary_checks_mitigated")
+                        or comparison.get("leg_a_mitigated")
+                    ),
+                    json.dumps(
+                        comparison.get("diagnostics_mitigated")
+                        or comparison.get("leg_b_mitigated")
+                    ),
                     int(bool(comparison.get("fix_confirmed")))
                     if comparison.get("fix_confirmed") is not None
                     else None,
@@ -207,10 +229,10 @@ def _row_to_comparison_dict(row: dict) -> dict:
         "faulted_trajectory": _load("faulted_trajectory_json"),
         "mitigated_trajectory": _load("mitigated_trajectory_json"),
         "divergence": _load("divergence_json"),
-        "leg_a_faulted": _load("leg_a_faulted_json") or _load("leg_a_json"),
-        "leg_b_faulted": _load("leg_b_faulted_json") or _load("leg_b_json"),
-        "leg_a_mitigated": _load("leg_a_mitigated_json"),
-        "leg_b_mitigated": _load("leg_b_mitigated_json"),
+        "primary_checks_faulted": _load("leg_a_faulted_json") or _load("leg_a_json"),
+        "diagnostics_faulted": _load("leg_b_faulted_json") or _load("leg_b_json"),
+        "primary_checks_mitigated": _load("leg_a_mitigated_json"),
+        "diagnostics_mitigated": _load("leg_b_mitigated_json"),
         "fix_confirmed": bool(row["fix_confirmed"]) if row.get("fix_confirmed") is not None else None,
         "created_at": row.get("created_at"),
     }

@@ -8,7 +8,7 @@
     "tools": [
       {
         "tool_id": "update_account",
-        "description": "Updates fields on an existing account. Parameters: account_id (string, required) \u2014 the account identifier; patch (object, required) \u2014 key-value pairs of fields to update. Returns the updated account object.",
+        "description": "Updates fields on an existing account. Parameters: account_id (string, required) — the account identifier; patch (object, required) — key-value pairs of fields to update. Returns the updated account object.",
         "input_format": {},
         "output_format": {
           "account_id": "string",
@@ -43,10 +43,5 @@
     "tool_id": "update_account",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "self_generated",
-    "source_id": "self_A4_account_update_field_rename",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  "endpoint_allowlist": []
 }

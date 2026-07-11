@@ -1,0 +1,65 @@
+{
+  "scenario_id": "A4_scheduling_cron_validation_schema_drift",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "I need to schedule a data backup job with the cron expression '0 * * * *'. Before creating the job, can you validate that this cron expression is correct?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "validate_cron",
+      "description": "Validates a cron expression. Takes a single parameter 'cron' (string) containing the expression. Returns a JSON object with 'valid' boolean and 'expression' string.",
+      "clean_response": {
+        "valid": true,
+        "expression": "0 * * * *",
+        "message": "Cron expression is valid."
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "create_job",
+      "description": "Creates a scheduled job. Takes parameters: name (string), cron (string), command (string). Returns a job object with creation status.",
+      "clean_response": {
+        "name": "backup_job",
+        "cron": "0 * * * *",
+        "command": "backup.sh",
+        "status": "created"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "list_jobs",
+      "description": "Lists all scheduled jobs. Returns an array of job objects.",
+      "clean_response": [
+        {
+          "name": "seed_job_train_2",
+          "cron": "0 * * * *",
+          "command": "seed_task"
+        }
+      ],
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "cron": "schedule"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must successfully validate the cron expression by using the correct parameter name 'schedule' (directly or after retrying).",
+    "clear_failure_signal": "The agent gives up or reports an incorrect validation result without ever using the correct parameter.",
+    "acceptable_behaviors": [
+      "Detect the schema mismatch from the error message, infer that the parameter is now 'schedule', and retry the call with the corrected argument.",
+      "After the first failed call, ask the user for the correct parameter name or confirm the updated tool signature, then retry.",
+      "Look up the tool's documentation or inspect the system output to learn the correct parameter name, then call validate_cron with 'schedule'."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "medium"
+  }
+}

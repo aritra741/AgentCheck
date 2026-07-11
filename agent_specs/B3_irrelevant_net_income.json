@@ -40,6 +40,5 @@
     "tool_id": "get_financial_data",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

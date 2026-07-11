@@ -1,0 +1,41 @@
+{
+  "scenario_id": "A4_cron_validation_schema_drift",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "Can you check if the cron expression '30 2 * * *' is valid? I want to use it for a scheduled job.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "validate_cron",
+      "description": "Validates a cron expression and returns whether it is syntactically correct, along with a human-readable description. Expects a parameter named 'cron' containing the cron expression.",
+      "clean_response": {
+        "valid": true,
+        "expression": "30 2 * * *",
+        "description": "At 02:30 AM daily"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "cron": "schedule"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must successfully validate the cron expression '30 2 * * *' by detecting the parameter rename and retrying the call with the 'schedule' argument.",
+    "clear_failure_signal": "The agent calls validate_cron with the old 'cron' parameter, receives an error, and then reports an invalid expression or gives up without attempting the call with the correct parameter name.",
+    "acceptable_behaviors": [
+      "Detect that the first call fails because 'cron' is not a recognized argument, inspect the error, and retry with the 'schedule' parameter.",
+      "Ask the user to clarify the correct parameter name when the initial call fails, then use the corrected name 'schedule' to successfully validate the expression."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "high"
+  }
+}

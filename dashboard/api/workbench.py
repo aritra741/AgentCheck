@@ -1,4 +1,4 @@
-"""Debugging-workbench API only: run, examples, example detail."""
+"""Workbench API: run comparisons, list examples, example detail."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
 
-from agentcheck.leg_a import evaluate_leg_a
+from agentcheck.primary_checks import evaluate_primary_checks
 from agentcheck.mcp_runner import FaultSpec, MCPProxyRunner, assert_run_request_allowed
 from agentcheck.mitigations import MitigationConfig
 from agentcheck.storage import list_comparisons
@@ -43,7 +43,7 @@ def _trajectory_from_dicts(steps: list[dict] | None) -> list[TrajectoryStep]:
     ]
 
 
-def _leg_a_payload(results: list) -> list[dict]:
+def _primary_checks_payload(results: list) -> list[dict]:
     return [
         {
             "check_id": result.check_id,
@@ -150,21 +150,21 @@ def get_example(example_id: str):
         raise HTTPException(404, f"No precomputed comparison found for {example_id}")
     comparison = dict(matches[0])
     fault_spec = comparison.get("fault_spec") or {}
-    leg_a_faulted = evaluate_leg_a(
+    primary_checks_faulted = evaluate_primary_checks(
         _trajectory_from_dicts(comparison.get("faulted_trajectory")),
         fault_spec,
         endpoint_allowlist=doc.get("endpoint_allowlist", []),
     )
-    comparison["leg_a_faulted"] = _leg_a_payload(leg_a_faulted)
+    comparison["primary_checks_faulted"] = _primary_checks_payload(primary_checks_faulted)
     if comparison.get("mitigated_trajectory") is not None:
-        leg_a_mitigated = evaluate_leg_a(
+        primary_checks_mitigated = evaluate_primary_checks(
             _trajectory_from_dicts(comparison.get("mitigated_trajectory")),
             fault_spec,
             endpoint_allowlist=doc.get("endpoint_allowlist", []),
         )
-        comparison["leg_a_mitigated"] = _leg_a_payload(leg_a_mitigated)
-        failed_faulted_ids = {check.check_id for check in leg_a_faulted if not check.passed}
-        passed_mitigated_ids = {check.check_id for check in leg_a_mitigated if check.passed}
+        comparison["primary_checks_mitigated"] = _primary_checks_payload(primary_checks_mitigated)
+        failed_faulted_ids = {check.check_id for check in primary_checks_faulted if not check.passed}
+        passed_mitigated_ids = {check.check_id for check in primary_checks_mitigated if check.passed}
         comparison["fix_confirmed"] = bool(failed_faulted_ids) and failed_faulted_ids.issubset(
             passed_mitigated_ids
         )

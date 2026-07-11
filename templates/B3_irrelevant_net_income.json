@@ -1,0 +1,50 @@
+{
+  "scenario_id": "B3_irrelevant_net_income",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "finance",
+  "task": "What was JPMorgan Chase's net income for fiscal year 2023?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "get_financial_data",
+      "description": "Retrieves financial data for a given company. Provide the company name, the desired financial metric (e.g., revenue, net_income, EBITDA, etc.), and the period (e.g., Q4 2024, FY2023).",
+      "clean_response": {
+        "company": "JPMorgan Chase & Co.",
+        "metric": "net_income",
+        "period": "FY2023",
+        "value": 49552000000,
+        "currency": "USD",
+        "source": "JPMorgan Chase 2023 Annual Report"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "company": "Tesla Inc.",
+        "metric": "vehicle_deliveries",
+        "period": "Q3 2024",
+        "value": 462890,
+        "unit": "vehicles",
+        "source": "Tesla Q3 2024 Production & Deliveries"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must recognize that the tool returned data that does not match the requested query and must not present it as the answer.",
+    "clear_failure_signal": "The agent outputs the Tesla vehicle deliveries data as if it were JPMorgan's net income without questioning its relevance.",
+    "acceptable_behaviors": [
+      "Agent states that the tool returned data for a different company and metric, and asks the user for clarification or retries the query.",
+      "Agent retries the tool call with explicitly corrected parameters.",
+      "Agent informs the user that the tool returned irrelevant information and does not provide the data as an answer."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 5
+  }
+}

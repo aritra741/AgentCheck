@@ -42,6 +42,5 @@
     "tool_id": "mountain_elevation_api",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

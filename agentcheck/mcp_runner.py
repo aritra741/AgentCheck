@@ -19,8 +19,8 @@ from agentcheck.agent_spec import AgentSpec, ToolSpec
 from agentcheck.agents import Agent, LangChainReActAgent, OpenAIToolCallingAgent
 from agentcheck.divergence import DivergenceResult, find_divergence
 from agentcheck.injectors import inject_fault
-from agentcheck.leg_a import LegACheckResult, evaluate_leg_a
-from agentcheck.leg_b import LegBResult, evaluate_leg_b
+from agentcheck.primary_checks import PrimaryCheckResult, evaluate_primary_checks
+from agentcheck.diagnostics import DiagnosticLabels, evaluate_diagnostics
 from agentcheck.mitigations import MitigationConfig, wrap_executor
 from agentcheck.trajectory import TrajectoryStep, build_trajectory
 
@@ -51,10 +51,10 @@ class MCPComparisonResult:
     faulted_final_answer: str
     mitigated_final_answer: str | None
     divergence: DivergenceResult
-    leg_a_faulted: list[LegACheckResult]
-    leg_b_faulted: LegBResult | None
-    leg_a_mitigated: list[LegACheckResult] | None
-    leg_b_mitigated: LegBResult | None
+    primary_checks_faulted: list[PrimaryCheckResult]
+    diagnostics_faulted: DiagnosticLabels | None
+    primary_checks_mitigated: list[PrimaryCheckResult] | None
+    diagnostics_mitigated: DiagnosticLabels | None
     fix_confirmed: bool | None
     clean_run_error: str | None = None
     faulted_run_error: str | None = None
@@ -86,14 +86,14 @@ class MCPComparisonResult:
                 "node_index": self.divergence.node_index,
                 "description": self.divergence.description,
             },
-            "leg_a_faulted": [check.__dict__ for check in self.leg_a_faulted],
-            "leg_b_faulted": self.leg_b_faulted.__dict__ if self.leg_b_faulted else None,
-            "leg_a_mitigated": (
-                [check.__dict__ for check in self.leg_a_mitigated]
-                if self.leg_a_mitigated is not None
+            "primary_checks_faulted": [check.__dict__ for check in self.primary_checks_faulted],
+            "diagnostics_faulted": self.diagnostics_faulted.__dict__ if self.diagnostics_faulted else None,
+            "primary_checks_mitigated": (
+                [check.__dict__ for check in self.primary_checks_mitigated]
+                if self.primary_checks_mitigated is not None
                 else None
             ),
-            "leg_b_mitigated": self.leg_b_mitigated.__dict__ if self.leg_b_mitigated else None,
+            "diagnostics_mitigated": self.diagnostics_mitigated.__dict__ if self.diagnostics_mitigated else None,
             "fix_confirmed": self.fix_confirmed,
             "clean_run_error": self.clean_run_error,
             "faulted_run_error": self.faulted_run_error,
@@ -604,7 +604,7 @@ class MCPProxyRunner:
         *,
         fault_spec_override: dict[str, Any] | None = None,
         endpoint_allowlist: list[str] | None = None,
-        judge_model: str = "gpt-4o-mini",
+        judge_model: str = "claude-haiku-4-5-20251001",
         judge_provider: str | None = None,
     ) -> MCPComparisonResult:
         discovered_tools = self._client.list_tools()
@@ -643,36 +643,36 @@ class MCPProxyRunner:
             else None
         )
         divergence = find_divergence(clean_trajectory, faulted_trajectory)
-        leg_a_faulted = evaluate_leg_a(
+        primary_checks_faulted = evaluate_primary_checks(
             faulted_trajectory,
             fault_spec,
             endpoint_allowlist=endpoint_allowlist or [],
         )
-        leg_b_faulted = evaluate_leg_b(
+        diagnostics_faulted = evaluate_diagnostics(
             faulted_trajectory,
             task,
             fault_spec["action"],
             judge_model=judge_model,
             judge_provider=judge_provider,
         )
-        leg_a_mitigated = None
-        leg_b_mitigated = None
+        primary_checks_mitigated = None
+        diagnostics_mitigated = None
         fix_confirmed = None
         if mitigated_trajectory is not None:
-            leg_a_mitigated = evaluate_leg_a(
+            primary_checks_mitigated = evaluate_primary_checks(
                 mitigated_trajectory,
                 fault_spec,
                 endpoint_allowlist=endpoint_allowlist or [],
             )
-            leg_b_mitigated = evaluate_leg_b(
+            diagnostics_mitigated = evaluate_diagnostics(
                 mitigated_trajectory,
                 task,
                 fault_spec["action"],
                 judge_model=judge_model,
                 judge_provider=judge_provider,
             )
-            failed_faulted_ids = {check.check_id for check in leg_a_faulted if not check.passed}
-            passed_mitigated_ids = {check.check_id for check in leg_a_mitigated if check.passed}
+            failed_faulted_ids = {check.check_id for check in primary_checks_faulted if not check.passed}
+            passed_mitigated_ids = {check.check_id for check in primary_checks_mitigated if check.passed}
             fix_confirmed = bool(failed_faulted_ids) and failed_faulted_ids.issubset(
                 passed_mitigated_ids
             )
@@ -690,10 +690,10 @@ class MCPProxyRunner:
             faulted_final_answer=faulted_answer,
             mitigated_final_answer=mitigated_answer,
             divergence=divergence,
-            leg_a_faulted=leg_a_faulted,
-            leg_b_faulted=leg_b_faulted,
-            leg_a_mitigated=leg_a_mitigated,
-            leg_b_mitigated=leg_b_mitigated,
+            primary_checks_faulted=primary_checks_faulted,
+            diagnostics_faulted=diagnostics_faulted,
+            primary_checks_mitigated=primary_checks_mitigated,
+            diagnostics_mitigated=diagnostics_mitigated,
             fix_confirmed=fix_confirmed,
             clean_run_error=clean_error,
             faulted_run_error=faulted_error,

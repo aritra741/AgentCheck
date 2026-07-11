@@ -17,6 +17,8 @@ from agentcheck.usage import record_llm_usage
 
 SCORER_VERSION = "0.2.1"
 
+# Recovery-action rubric aligned with the human annotation protocol.
+# See annotation_ui.py ANNOTATION_DIMENSIONS["recovery_action"].
 RECOVERY_ACTION_RUBRIC = """Classify how the agent handled the faulty interaction overall.
 Use the same definitions given to human annotators:
 
@@ -55,7 +57,7 @@ whether automated security checks passed."""
 def score_recovery_action(
     trace: dict,
     scenario: dict,
-    judge_model: str = "gpt-4o-mini",
+    judge_model: str = "claude-haiku-4-5-20251001",
     judge_provider: str | None = None,
 ) -> tuple[dict, dict]:
     """Score only the recovery-action dimension (used for Category C when judge is on)."""
@@ -65,7 +67,7 @@ def score_recovery_action(
 def score_trace(
     trace: dict,
     scenario: dict,
-    judge_model: str = "gpt-4o-mini",
+    judge_model: str = "claude-haiku-4-5-20251001",
     judge_provider: str | None = None,
 ) -> dict:
     """
@@ -156,9 +158,14 @@ def _score_recovery_action(
 
 Task: {scenario.get('task', trace.get('task', ''))}
 Fault type: {trace.get('fault_type_description', scenario.get('fault_type', ''))}
-Injected or faulty tool response: {injected}
+Injected or faulty tool response (the first faulty response seen): {injected}
+Agent's intermediate steps, in order, including what each tool call actually returned: {step_summaries}
 Agent's final response to the user: {trace.get('final_answer', '')}
-Agent's intermediate steps: {step_summaries}
+
+If a later tool call in the intermediate steps shows a "normal response" (not marked TIMEOUT or
+FAULTY RESPONSE) and the final answer is grounded in that normal response, the agent successfully
+retried and recovered — this should be scored RECOVERED even if the final answer does not contain
+an explicit caveat, since there is no longer anything to caveat.
 
 {RECOVERY_ACTION_RUBRIC}
 
@@ -285,6 +292,15 @@ def _step_summaries(trace: dict) -> str:
     summaries = []
     for step in trace.get("steps", []):
         completion = step.get("llm_generation", {}).get("completion", "")
-        tools = [ti.get("tool_id") for ti in step.get("tool_interactions", [])]
-        summaries.append(f"LLM: {completion[:200]} | Tools: {tools}")
+        tool_calls = []
+        for ti in step.get("tool_interactions", []):
+            tool_id = ti.get("tool_id")
+            if ti.get("timed_out"):
+                observed = "TIMEOUT"
+            elif ti.get("injected_response") is not None:
+                observed = f"FAULTY RESPONSE: {ti['injected_response']}"
+            else:
+                observed = f"normal response: {ti.get('clean_response')}"
+            tool_calls.append(f"{tool_id} -> {observed}")
+        summaries.append(f"LLM: {completion[:200]} | Tool calls: {tool_calls}")
     return "\n".join(summaries)

@@ -1,0 +1,8 @@
+{
+  "trace_count": 36,
+  "overall_pass_fail_agreement": 1.0,
+  "failure_detection_agreement": 1.0,
+  "recovery_action_agreement": 1.0,
+  "uncertainty_communication_agreement": 1.0,
+  "disagreements": []
+}

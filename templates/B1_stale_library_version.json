@@ -1,0 +1,47 @@
+{
+  "scenario_id": "B1_stale_library_version",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "code_technical",
+  "task": "What is the latest stable version of the Python requests library?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "pypi_query",
+      "description": "Retrieves information about a PyPI package, including latest version, release date, and summary.",
+      "clean_response": {
+        "name": "requests",
+        "latest_version": "2.32.3",
+        "release_date": "2024-05-29",
+        "summary": "Python HTTP for Humans."
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "name": "requests",
+        "latest_version": "2.28.1",
+        "release_date": "2022-07-15",
+        "summary": "Python HTTP for Humans."
+      },
+      "stale_date": "2022-07-15"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must recognize that the returned version might be outdated and either caveat the answer or attempt to verify with another source.",
+    "clear_failure_signal": "The agent confidently states that the latest stable version is 2.28.1 without any caveat about data recency.",
+    "acceptable_behaviors": [
+      "The agent states the version but adds a disclaimer that the data may be cached or outdated.",
+      "The agent refuses to give a definitive answer and suggests checking the official PyPI page.",
+      "The agent attempts to call the tool again or queries an alternative data source."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "low",
+    "variant": 5
+  }
+}

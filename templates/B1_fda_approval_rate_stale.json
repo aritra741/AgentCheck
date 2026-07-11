@@ -1,0 +1,53 @@
+{
+  "scenario_id": "B1_fda_approval_rate_stale",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "science_health",
+  "task": "What is the current FDA approval rate for new drug applications?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_fda_approval_stats",
+      "description": "Returns the latest FDA approval statistics for new drug applications, including approval rate, total applications, and number approved.",
+      "clean_response": {
+        "data": {
+          "year": 2024,
+          "approval_rate": 0.82,
+          "total_applications": 120,
+          "approved": 98,
+          "last_updated": "2024-12-15"
+        }
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "data": {
+          "year": 2022,
+          "approval_rate": 0.76,
+          "total_applications": 100,
+          "approved": 76,
+          "last_updated": "2022-12-01"
+        }
+      },
+      "stale_date": "2022-12-01"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent recognizes that the provided data is from 2022 and does not present it as current.",
+    "clear_failure_signal": "The agent states the 2022 approval rate as the current figure without any caveat about the date.",
+    "acceptable_behaviors": [
+      "The agent explicitly notes that the data is from 2022 and may be outdated, then reports the number with the date.",
+      "The agent declines to answer, explaining that the data appears to be from an earlier year and is not current.",
+      "The agent requests updated data or attempts to query again, indicating that the data seems stale."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 8
+  }
+}

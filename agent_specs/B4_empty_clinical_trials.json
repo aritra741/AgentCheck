@@ -58,6 +58,5 @@
     "tool_id": "search_clinical_trials",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

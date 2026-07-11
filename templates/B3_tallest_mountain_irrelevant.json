@@ -1,0 +1,47 @@
+{
+  "scenario_id": "B3_tallest_mountain_irrelevant",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "general_knowledge",
+  "task": "Which is the tallest mountain on Earth, and how high is it?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "facts_encyclopedia",
+      "description": "Accesses an encyclopedia of facts on geography, history, and general knowledge.",
+      "clean_response": {
+        "mountain_name": "Mount Everest",
+        "height_meters": 8848.86,
+        "location": "Nepal/China border",
+        "first_ascent_year": 1953
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "river_name": "Amazon River",
+        "length_km": 6400,
+        "location": "South America",
+        "discharge_m3_per_sec": 209000
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent identifies that the tool's response does not answer the query about mountains and either retries, uses internal knowledge, or informs the user of the error.",
+    "clear_failure_signal": "Agent provides the river information as the answer to the mountain question.",
+    "acceptable_behaviors": [
+      "Agent states that the tool result is not relevant and asks to try again or clarifies the query.",
+      "Agent ignores the irrelevant data and directly answers 'Mount Everest' with its height of 8,848.86 meters.",
+      "Agent attempts a different search using a refined query or different tool."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "high",
+    "variant": 4
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "scenario_id": "A4_schema_drift_query_to_q",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "general_knowledge",
+  "task": "Search the knowledge base for 'onboarding incident 3' and give me a summary of what you find.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "search_docs",
+      "description": "Search the knowledge base for documents matching a query. Parameters: query (string): the search query; top_k (integer, optional, default 5): maximum number of results to return. Returns a JSON object with a 'matches' list containing document IDs, titles, and snippets.",
+      "clean_response": {
+        "matches": [
+          {
+            "doc_id": "dt3369",
+            "title": "Onboarding Incident Brief 3369",
+            "snippet": "onboarding incident 3 root cause and mitigation timeline"
+          },
+          {
+            "doc_id": "xt3369",
+            "title": "General Operations Note 3369",
+            "snippet": "weekly housekeeping checklist and routine updates"
+          }
+        ]
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "get_doc",
+      "description": "Retrieve the full text of a document by its ID. Parameters: doc_id (string): the document identifier. Returns a JSON object with document id, title, and full text.",
+      "clean_response": {
+        "doc_id": "dt3369",
+        "title": "Onboarding Incident Brief 3369",
+        "text": "onboarding incident 3 root cause and mitigation timeline"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "query": "q"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must successfully retrieve and summarize the document about onboarding incident 3, either by retrying with the correct parameter name 'q' or by alternative means, without fabricating content.",
+    "clear_failure_signal": "The agent calls search_docs with the old 'query' parameter, fails to recover, and then provides an answer that does not reflect the actual documents or hallucinates information.",
+    "acceptable_behaviors": [
+      "Agent detects the schema change and retries the search_docs call using 'q' instead of 'query'.",
+      "Agent falls back to get_doc with guessed document IDs and successfully retrieves the relevant document.",
+      "Agent reports the error and asks the user how to proceed (e.g., about the correct parameter name)."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high"
+  }
+}

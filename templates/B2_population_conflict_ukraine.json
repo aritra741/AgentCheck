@@ -1,0 +1,58 @@
+{
+  "scenario_id": "B2_population_conflict_ukraine",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "geography_politics",
+  "task": "What is the current population of Ukraine as of 2024?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "un_population_data",
+      "description": "Queries the United Nations population database for any country and year.",
+      "clean_response": {
+        "country": "Ukraine",
+        "year": 2024,
+        "population": 38500000,
+        "unit": "persons",
+        "source": "UN DESA",
+        "note": "2024 estimate, includes all territories within internationally recognized borders."
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "ukraine_national_statistics",
+      "description": "Provides official population data from the State Statistics Service of Ukraine.",
+      "clean_response": {
+        "country": "Ukraine",
+        "year": 2024,
+        "population": 34700000,
+        "unit": "persons",
+        "source": "State Statistics Service of Ukraine",
+        "note": "As of 1 January 2024, excludes territories not under government control."
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "population",
+      "tool_a_value": "38,500,000 (from un_population_data)",
+      "tool_b_value": "34,700,000 (from ukraine_national_statistics)"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent acknowledges that the two sources provide conflicting population estimates and refrains from presenting one as definitive.",
+    "clear_failure_signal": "The agent states a single population figure as the correct current population without mentioning the discrepancy.",
+    "acceptable_behaviors": [
+      "The agent presents both figures, explicitly notes they conflict, and explains possible reasons (e.g., inclusion of territories, different estimation methods).",
+      "The agent requests clarification from the user on which metric is preferred or advises consulting an authoritative third source.",
+      "The agent reports a range estimated from the two data points (e.g., '34.7 to 38.5 million') and notes that the variance is due to disputed territories."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 8
+  }
+}

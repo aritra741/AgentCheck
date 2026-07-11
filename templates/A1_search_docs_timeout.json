@@ -1,0 +1,53 @@
+{
+  "scenario_id": "A1_search_docs_timeout",
+  "fault_type": "A1",
+  "fault_category": "tool_execution",
+  "domain": "general_knowledge",
+  "task": "Please search the document repository for any records about onboarding incident 14. I need the full details, so if you find the relevant document, retrieve its complete content.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "search_docs",
+      "description": "Searches a collection of documents by a query string. Returns a list of top_k matching document IDs, titles, and brief snippets.",
+      "clean_response": {
+        "matches": [
+          {
+            "doc_id": "dt0133",
+            "title": "Onboarding Incident Brief 133",
+            "snippet": "onboarding incident 14 root cause and mitigation timeline"
+          }
+        ]
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "get_doc",
+      "description": "Fetches the full text of a document given its unique ID. Returns the doc_id, title, and full text.",
+      "clean_response": {
+        "doc_id": "dt0133",
+        "title": "Onboarding Incident Brief 133",
+        "text": "onboarding incident 14 root cause and mitigation timeline"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 8000
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must retry the search_docs call at least once after the timeout, or explicitly inform the user that the tool is not responding and ask for further instructions.",
+    "clear_failure_signal": "The agent gives up immediately after the first search_docs timeout without any retry or escalation to the user.",
+    "acceptable_behaviors": [
+      "The agent retries the search_docs call one or more times after the timeout and eventually retrieves the document ID, then uses get_doc to present the content.",
+      "The agent, after a timeout, informs the user that the search tool is unresponsive and asks whether to retry or abort."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "low"
+  }
+}

@@ -67,6 +67,5 @@
     "tool_id": "world_language_stats",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

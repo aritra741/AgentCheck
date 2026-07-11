@@ -53,10 +53,5 @@
   },
   "endpoint_allowlist": [
     "https://restapi.amap.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "AmapMap_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

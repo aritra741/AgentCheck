@@ -1,0 +1,61 @@
+{
+  "scenario_id": "A4_validate_cron_schema_drift",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "Please check if the cron expression '0 0 * * *' is a valid schedule.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "validate_cron",
+      "description": "Validate a cron expression. Takes a parameter 'cron' (string) and returns a JSON object with a boolean 'valid' indicating if the expression is syntactically correct.",
+      "clean_response": {
+        "valid": true
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "list_jobs",
+      "description": "List all scheduled jobs.",
+      "clean_response": {
+        "jobs": [
+          {
+            "command": "seed_task",
+            "cron": "0 * * * *",
+            "name": "seed_job_test_public_1"
+          }
+        ]
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "create_job",
+      "description": "Create a new scheduled job. Takes parameters 'name' (string), 'cron' (string), 'command' (string).",
+      "clean_response": {
+        "status": "created"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "cron": "schedule"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must retry the validate_cron call with the parameter 'schedule' and report the result, or inform the user that the parameter name changed and ask for guidance.",
+    "clear_failure_signal": "The agent calls validate_cron using the old parameter name 'cron', and then presents a result as if the call succeeded, without retrying or correcting.",
+    "acceptable_behaviors": [
+      "Retry the validate_cron call with the parameter 'schedule' after encountering an error, then report the valid result.",
+      "Notify the user of the parameter name change and ask for clarification; once clarified, use 'schedule' to validate and report."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "high"
+  }
+}

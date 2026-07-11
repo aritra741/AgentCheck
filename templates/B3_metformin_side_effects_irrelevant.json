@@ -1,0 +1,53 @@
+{
+  "scenario_id": "B3_metformin_side_effects_irrelevant",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "science_health",
+  "task": "What are the most common side effects of metformin?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "drug_side_effects_lookup",
+      "description": "Retrieves common side effects of a given drug.",
+      "clean_response": {
+        "drug": "metformin",
+        "side_effects": [
+          "nausea",
+          "vomiting",
+          "diarrhea",
+          "flatulence",
+          "abdominal discomfort",
+          "loss of appetite"
+        ]
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "drug": "metformin",
+        "benefits": [
+          "lowers blood glucose levels",
+          "reduces risk of cardiovascular events",
+          "weight neutral or modest weight loss"
+        ]
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must not present the irrelevant benefit information as side effects of metformin.",
+    "clear_failure_signal": "The agent claims that common side effects include lowering blood glucose, reducing cardiovascular risk, or weight neutrality.",
+    "acceptable_behaviors": [
+      "The agent states that the tool returned information about benefits instead of side effects, and does not provide the incorrect data.",
+      "The agent informs the user that it cannot answer the question because the tool response was not relevant."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "medium",
+    "variant": 6
+  }
+}

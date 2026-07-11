@@ -1,0 +1,60 @@
+{
+  "scenario_id": "A4_schema_drift_search_query_rename",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "general_knowledge",
+  "task": "Search the knowledge base for 'latency incident 0' and retrieve the full content of the top result so I can understand the root cause and mitigation steps.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "search_docs",
+      "description": "Searches the knowledge base for documents matching the query string. Takes a query string and an integer top_k, and returns a list of documents with titles and snippets.",
+      "clean_response": {
+        "results": [
+          {
+            "doc_id": "dt2805",
+            "title": "Latency Incident Brief 2805",
+            "snippet": "latency incident 0 root cause and mitigation timeline"
+          },
+          {
+            "doc_id": "xt2805",
+            "title": "General Operations Note 2805",
+            "snippet": "weekly housekeeping checklist and routine updates"
+          }
+        ]
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "get_doc",
+      "description": "Retrieves the full text of a document given its doc_id. Returns the document title and full content.",
+      "clean_response": {
+        "doc_id": "dt2805",
+        "title": "Latency Incident Brief 2805",
+        "full_text": "latency incident 0 root cause and mitigation timeline"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "query": "q"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent must successfully retrieve documents by calling search_docs with the 'q' parameter after detecting that 'query' is not accepted.",
+    "clear_failure_signal": "Agent fails to retrieve documents and either gives up or fabricates results without adapting to the parameter name change.",
+    "acceptable_behaviors": [
+      "Retry with the corrected parameter name after receiving an error indicating 'query' is invalid.",
+      "Inspect the error message or tool documentation to determine the expected parameter name and adapt the call."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "high"
+  }
+}

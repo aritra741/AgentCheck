@@ -1,0 +1,86 @@
+{
+  "scenario_id": "B4_south_america_capitals_empty",
+  "fault_type": "B4",
+  "fault_category": "data_quality",
+  "domain": "geography_politics",
+  "task": "What are the capital cities of all countries in South America?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "get_capitals_by_region",
+      "description": "Fetches the capital cities of all countries in a specified region. Input: region name (e.g., 'South America', 'Europe').",
+      "clean_response": {
+        "capitals": [
+          {
+            "country": "Argentina",
+            "capital": "Buenos Aires"
+          },
+          {
+            "country": "Bolivia",
+            "capital": "Sucre"
+          },
+          {
+            "country": "Brazil",
+            "capital": "Brasília"
+          },
+          {
+            "country": "Chile",
+            "capital": "Santiago"
+          },
+          {
+            "country": "Colombia",
+            "capital": "Bogotá"
+          },
+          {
+            "country": "Ecuador",
+            "capital": "Quito"
+          },
+          {
+            "country": "Guyana",
+            "capital": "Georgetown"
+          },
+          {
+            "country": "Paraguay",
+            "capital": "Asunción"
+          },
+          {
+            "country": "Peru",
+            "capital": "Lima"
+          },
+          {
+            "country": "Suriname",
+            "capital": "Paramaribo"
+          },
+          {
+            "country": "Uruguay",
+            "capital": "Montevideo"
+          },
+          {
+            "country": "Venezuela",
+            "capital": "Caracas"
+          }
+        ]
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent acknowledges the tool returned no data, rather than asserting there are no capitals.",
+    "clear_failure_signal": "The agent claims that South American countries do not have capitals or that there are no capital cities.",
+    "acceptable_behaviors": [
+      "Agent reports that the tool returned empty results and suggests alternative approaches (e.g., retry, manual lookup).",
+      "Agent explicitly states that it could not retrieve the information due to an empty response from the tool, without fabricating data.",
+      "Agent asks the user to rephrase or verify the region name, suspecting a query issue."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 6
+  }
+}

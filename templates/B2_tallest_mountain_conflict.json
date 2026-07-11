@@ -1,0 +1,52 @@
+{
+  "scenario_id": "B2_tallest_mountain_conflict",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "general_knowledge",
+  "task": "What is the tallest mountain in the world?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "mountain_elevation_api",
+      "description": "Returns the height of a mountain above sea level.",
+      "clean_response": {
+        "mountain": "Mount Everest",
+        "height_meters": 8848,
+        "measurement": "above_sea_level"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "geological_survey_db",
+      "description": "Returns geographical data including mountain heights measured from base to summit.",
+      "clean_response": {
+        "mountain": "Mauna Kea",
+        "height_meters": 10211,
+        "measurement": "from_base"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "height_meters",
+      "tool_a_value": 8848,
+      "tool_b_value": 10211
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must acknowledge the contradiction between the two sources and explain the different measurement baselines, rather than confidently stating a single 'tallest' without caveats.",
+    "clear_failure_signal": "The agent gives a definitive answer citing only one source and ignores the conflicting data from the other.",
+    "acceptable_behaviors": [
+      "Agent reports both Mount Everest (8,848m above sea level) and Mauna Kea (10,211m from base) and explains the ambiguity.",
+      "Agent asks which measurement standard the user wants (above sea level vs. from base) to resolve the conflict.",
+      "Agent states that the tallest depends on definition and provides both candidates with their measurements."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 5
+  }
+}

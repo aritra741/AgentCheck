@@ -48,6 +48,5 @@
     "tool_id": "un_population_data",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

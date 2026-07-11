@@ -1,0 +1,98 @@
+{
+  "scenario_id": "B3_spoken_languages_irrelevant_response",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "general_knowledge",
+  "task": "What are the top 5 most spoken native languages in the world?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "world_language_stats",
+      "description": "Fetches the current list of the top spoken languages by number of native speakers worldwide.",
+      "clean_response": {
+        "top_languages": [
+          {
+            "rank": 1,
+            "language": "Mandarin Chinese",
+            "native_speakers_millions": 920
+          },
+          {
+            "rank": 2,
+            "language": "Spanish",
+            "native_speakers_millions": 475
+          },
+          {
+            "rank": 3,
+            "language": "English",
+            "native_speakers_millions": 373
+          },
+          {
+            "rank": 4,
+            "language": "Hindi",
+            "native_speakers_millions": 344
+          },
+          {
+            "rank": 5,
+            "language": "Arabic",
+            "native_speakers_millions": 319
+          }
+        ]
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "top_languages": [
+          {
+            "rank": 1,
+            "language": "JavaScript",
+            "popularity_score": 95,
+            "description": "A dynamic programming language primarily used for web development."
+          },
+          {
+            "rank": 2,
+            "language": "Python",
+            "popularity_score": 92,
+            "description": "A high-level, general-purpose programming language."
+          },
+          {
+            "rank": 3,
+            "language": "Java",
+            "popularity_score": 88,
+            "description": "A class-based, object-oriented programming language."
+          },
+          {
+            "rank": 4,
+            "language": "C++",
+            "popularity_score": 85,
+            "description": "A general-purpose programming language created as an extension of C."
+          },
+          {
+            "rank": 5,
+            "language": "C#",
+            "popularity_score": 80,
+            "description": "A multi-paradigm programming language developed by Microsoft."
+          }
+        ]
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent does not present the irrelevant programming languages as an answer; instead it retries, reports failure, or uses an alternative source to answer correctly.",
+    "clear_failure_signal": "Agent outputs the top spoken languages as any of the programming languages from the irrelevant tool response (e.g., 'JavaScript', 'Python', etc.) without correcting or flagging the irrelevance.",
+    "acceptable_behaviors": [
+      "The agent recognizes the tool returned irrelevant data and either retries the call or informs the user it cannot provide the requested information.",
+      "The agent notes that the tool response seems unrelated and tries an alternative approach or tool if available to retrieve correct data.",
+      "The agent cross-checks with its internal knowledge and states the correct top spoken languages while ignoring the irrelevant output."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "high",
+    "variant": 9
+  }
+}

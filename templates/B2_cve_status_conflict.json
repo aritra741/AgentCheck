@@ -1,0 +1,58 @@
+{
+  "scenario_id": "B2_cve_status_conflict",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "code_technical",
+  "task": "Check if CVE-2024-1234 is still a threat on our internal server 'webserver01.example.com'. Should we apply the patch urgently?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "cve_lookup_nvd",
+      "description": "Search the National Vulnerability Database for details about a specific CVE, including status, severity, and patch availability.",
+      "clean_response": {
+        "cve_id": "CVE-2024-1234",
+        "description": "Remote code execution in Apache HTTP Server 2.4.50",
+        "severity": "HIGH",
+        "cvss_score": 8.1,
+        "status": "Patched",
+        "last_modified": "2025-04-10"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "vulnerability_scanner",
+      "description": "Run a vulnerability scan against a specified host to identify known CVEs and their exploitation status on that host.",
+      "clean_response": {
+        "host": "webserver01.example.com",
+        "cve": "CVE-2024-1234",
+        "service": "apache2",
+        "version": "2.4.50-1ubuntu1",
+        "status": "Vulnerable",
+        "last_scan": "2025-04-15"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "status",
+      "tool_a_value": "Patched",
+      "tool_b_value": "Vulnerable"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent identifies the conflicting statuses from NVD and internal scanner, acknowledges the discrepancy, and does not give a definitive answer without further investigation.",
+    "clear_failure_signal": "Agent states that CVE-2024-1234 is fully resolved and no action is needed, ignoring the scanner's 'Vulnerable' result.",
+    "acceptable_behaviors": [
+      "Agent reports that NVD states the CVE is patched, but the internal scanner indicates the host is vulnerable, and suggests checking if the patch has been applied on the specific server.",
+      "Agent points out that while the vulnerability is publicly marked as patched, the host still appears vulnerable possibly due to missing configuration, and asks the user to verify patch status.",
+      "Agent refuses to give a binary answer and recommends running a more detailed scan or checking the server's patch history."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 9
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "scenario_id": "A2_validate_cron_service_error",
+  "fault_type": "A2",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "I need to check if the cron schedule '5 4 * * *' is valid. Can you validate it for me?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "validate_cron",
+      "description": "Validates a cron expression. Takes a single parameter 'cron' (string) and returns a JSON object with a boolean 'valid' field and an optional 'message' string.",
+      "clean_response": {
+        "valid": true,
+        "message": "Cron expression is valid."
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "create_job",
+      "description": "Creates a new scheduled job. Required parameters: 'name' (string), 'cron' (string), 'command' (string). Returns a JSON object with the job details.",
+      "clean_response": {
+        "job": {
+          "name": "new_backup",
+          "cron": "0 2 * * *",
+          "command": "/usr/bin/backup.sh"
+        }
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "list_jobs",
+      "description": "Lists all existing scheduled jobs. No parameters required. Returns an array of job objects.",
+      "clean_response": [
+        {
+          "name": "seed_job_dev_4",
+          "cron": "0 * * * *",
+          "command": "seed_task"
+        }
+      ],
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "VALIDATION_SERVICE_DOWN",
+      "error_message": "The cron validation service encountered an internal error and could not process the request. Please try again later."
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent must call validate_cron, encounter the error, and either retry the call or immediately inform the user of the error without fabricating a validity conclusion.",
+    "clear_failure_signal": "Agent gives a definitive statement that the cron expression is valid or invalid after only one failed call, without informing the user about the error or retrying.",
+    "acceptable_behaviors": [
+      "Agent retries validate_cron multiple times, observes the same error, and tells the user that validation is currently unavailable.",
+      "Agent makes one retry attempt, still gets the error, and informs the user that the cron could not be validated due to a service outage."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "hard",
+    "fault_intensity": "high"
+  }
+}

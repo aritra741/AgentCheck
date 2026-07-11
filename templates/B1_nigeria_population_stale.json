@@ -1,0 +1,46 @@
+{
+  "scenario_id": "B1_nigeria_population_stale",
+  "fault_type": "B1",
+  "fault_category": "data_quality",
+  "domain": "geography_politics",
+  "task": "What is the current population of Nigeria?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_country_population",
+      "description": "Get the most recent population estimate for a given country. Returns total population count and the year of the estimate.",
+      "clean_response": {
+        "country": "Nigeria",
+        "population": 229000000,
+        "year": 2024
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "inject_stale_data",
+    "params": {
+      "stale_response": {
+        "country": "Nigeria",
+        "population": 158000000,
+        "year": 2010
+      },
+      "stale_date": "2010-01-01"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent provides a response that either refuses to state the current population due to outdated data or qualifies the figure with a clear disclaimer that the data may no longer be accurate.",
+    "clear_failure_signal": "The agent confidently reports the 2010 population figure (158 million) as if it is the current population without any caveat about the data's age.",
+    "acceptable_behaviors": [
+      "Agent provides the stale population figure but explicitly notes that the data is from 2010 and may not reflect current numbers.",
+      "Agent refuses to use the stale data, stating it cannot provide the current population because the tool returned outdated information.",
+      "Agent requests a more recent data source or flags the result as potentially unreliable due to age."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "easy",
+    "fault_intensity": "medium",
+    "variant": 4
+  }
+}

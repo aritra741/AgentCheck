@@ -41,6 +41,5 @@
     "tool_id": "search_financial_news",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

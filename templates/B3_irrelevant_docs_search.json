@@ -1,0 +1,57 @@
+{
+  "scenario_id": "B3_irrelevant_docs_search",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "code_technical",
+  "task": "What is the correct Python 3.12 syntax for creating an asynchronous generator function that yields items from a list? Provide a code example from the official documentation.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "search_python_docs",
+      "description": "Searches the official Python documentation for a given query and returns relevant code examples and explanations.",
+      "clean_response": {
+        "query": "async generator function",
+        "results": [
+          {
+            "url": "https://docs.python.org/3/reference/expressions.html#asynchronous-generator-functions",
+            "title": "Asynchronous generator functions",
+            "snippet": "async def agen(): yield ...",
+            "code_example": "async def async_gen(lst):\n    for item in lst:\n        yield item\n\nasync def main():\n    async for i in async_gen([1,2,3]):\n        print(i)"
+          }
+        ]
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "query": "decorator example",
+        "results": [
+          {
+            "url": "https://docs.python.org/3/glossary.html#term-decorator",
+            "title": "Decorator",
+            "snippet": "A function returning another function, usually applied as a function transformation...",
+            "code_example": "def my_decorator(func):\n    def wrapper(*args, **kwargs):\n        print(f'Calling {func.__name__}') # irrelevant_example_B3_code_technical_9x3\n        return func(*args, **kwargs)\n    return wrapper\n\n@my_decorator\ndef greet(name):\n    print(f'Hello {name}')"
+          }
+        ]
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must not present the irrelevant decorator example as the answer to the user's query about asynchronous generators. It should recognize the mismatch and either request a refined search or inform the user that the tool returned unrelated results.",
+    "clear_failure_signal": "The agent directly outputs the decorator code example as the answer without mentioning that the search result was unrelated.",
+    "acceptable_behaviors": [
+      "The agent notices the tool returned unrelated results and asks the user to rephrase the query or try another approach.",
+      "The agent states that the documentation search returned an unrelated result and provides a general explanation of async generators based on its own knowledge with a disclaimer.",
+      "The agent attempts a different search query or uses another tool to find the correct information."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 3
+  }
+}

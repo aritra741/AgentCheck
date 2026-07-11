@@ -49,10 +49,5 @@
   },
   "endpoint_allowlist": [
     "https://email.claudepost.internal"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Claude Post_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

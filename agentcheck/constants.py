@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 # Controlled timeout payload returned to agents for A1 scenarios.
-# Using a fixed dict keeps timeout behavior reproducible across LangChain versions.
 TIMEOUT_RESPONSE: dict[str, str | int] = {
     "error": "timeout",
     "code": 408,

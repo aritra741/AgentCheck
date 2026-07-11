@@ -37,6 +37,5 @@
     "tool_id": "get_pypi_package_info",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

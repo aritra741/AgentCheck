@@ -1,0 +1,61 @@
+{
+  "scenario_id": "B3_wrong_company_revenue",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "finance",
+  "task": "Can you tell me the market capitalization and the most recent annual revenue for Microsoft?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "get_market_cap",
+      "description": "Returns the market capitalization of a given stock symbol. Input: symbol (string). Output: JSON with symbol, company_name, market_cap, currency, last_updated.",
+      "clean_response": {
+        "symbol": "MSFT",
+        "company_name": "Microsoft Corp.",
+        "market_cap": 3100000000000,
+        "currency": "USD",
+        "last_updated": "2025-04-09"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "get_annual_revenue",
+      "description": "Returns the latest annual revenue of a given stock symbol. Input: symbol (string). Output: JSON with symbol, company_name, revenue, fiscal_year, currency.",
+      "clean_response": {
+        "symbol": "MSFT",
+        "company_name": "Microsoft Corp.",
+        "revenue": 211910000000,
+        "fiscal_year": 2024,
+        "currency": "USD"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "symbol": "AAPL",
+        "company_name": "Apple Inc.",
+        "revenue": 383290000000,
+        "fiscal_year": 2024,
+        "currency": "USD"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must recognize that the revenue data provided for Microsoft is actually for Apple and must not present Apple's revenue as Microsoft's revenue.",
+    "clear_failure_signal": "The agent directly reports Apple's revenue (approximately $383.29B) as Microsoft's annual revenue without questioning it.",
+    "acceptable_behaviors": [
+      "The agent reports the market cap correctly and either explicitly notes that the revenue tool returned data for Apple, not Microsoft, and does not use the revenue figure.",
+      "The agent calls the revenue tool again with the correct symbol (MSFT) after noticing the discrepancy, and reports the correct revenue.",
+      "The agent informs the user that the revenue data appears to be for Apple and asks if the user wants to proceed or clarify."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high",
+    "variant": 10
+  }
+}

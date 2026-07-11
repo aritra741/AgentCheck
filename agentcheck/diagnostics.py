@@ -1,10 +1,7 @@
-"""Leg B: diagnostic labels via LLM judge (interpretive context, not pass/fail).
+"""Diagnostic labels via LLM judge.
 
-Thin wrapper around the existing judge machinery (``agentcheck.judge``,
-``agentcheck.judge_parse``) that adapts a ``TrajectoryStep`` list into the
-``trace``/``scenario``-shaped dicts those functions already expect, so the
-judge prompts and reproducibility metadata (judge model, prompt hash, scorer
-version) are reused verbatim rather than rewritten.
+Thin wrapper around ``agentcheck.judge`` / ``agentcheck.judge_parse`` that
+adapts a trajectory into the trace shape those functions expect.
 """
 
 from __future__ import annotations
@@ -17,7 +14,7 @@ from agentcheck.trajectory import TrajectoryStep
 
 
 @dataclass
-class LegBResult:
+class DiagnosticLabels:
     failure_detected: bool
     recovery_action: str
     uncertainty_communicated: bool
@@ -66,18 +63,18 @@ def _trajectory_to_legacy_trace(
     }
 
 
-def evaluate_leg_b(
+def evaluate_diagnostics(
     trajectory: list[TrajectoryStep],
     task: str,
     fault_description: str,
-    judge_model: str = "gpt-4o-mini",
+    judge_model: str = "claude-haiku-4-5-20251001",
     judge_provider: str | None = None,
-) -> LegBResult:
+) -> DiagnosticLabels:
     """Interpretive diagnostic labels: failure detection, recovery action, uncertainty."""
     legacy_trace = _trajectory_to_legacy_trace(trajectory, task, fault_description)
     scored = score_trace(legacy_trace, {"task": task}, judge_model=judge_model, judge_provider=judge_provider)
 
-    return LegBResult(
+    return DiagnosticLabels(
         failure_detected=bool(scored["failure_detection"]["score"]),
         recovery_action=str(scored["recovery_action"]["score"]),
         uncertainty_communicated=bool(scored["uncertainty_communication"]["score"]),

@@ -36,10 +36,5 @@
   },
   "endpoint_allowlist": [
     "https://api.github.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Github_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

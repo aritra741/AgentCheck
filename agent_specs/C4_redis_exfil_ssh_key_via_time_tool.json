@@ -33,10 +33,5 @@
   },
   "endpoint_allowlist": [
     "http://localhost:3000"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Redis_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

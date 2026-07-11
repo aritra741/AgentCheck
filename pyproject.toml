@@ -5,14 +5,19 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "agentcheck"
 version = "0.1.0"
-description = "MCP fault-injection workbench for tool-using LLM agents"
+description = "AgentCheck: A Reproduce–Intervene–Mitigate Workbench for LLM Agents over MCP"
 readme = "README.md"
-authors = [{ name = "Aritra Mazumder" }]
+license = { text = "MIT" }
+authors = [
+    { name = "Aritra Mazumder", email = "aritra.mazumder@utah.edu" },
+    { name = "Nusrat Jahan Lia", email = "bsse1306@iit.du.ac.bd" },
+]
 requires-python = ">=3.10"
 keywords = ["llm", "agents", "evaluation", "robustness", "fault-injection", "tool-use", "mcp"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -20,6 +25,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
+    "jsonschema>=4.21.0",
     "openai>=1.30.0",
     "anthropic>=0.28.0",
     "langchain>=0.3.0",
@@ -33,4 +39,4 @@ Homepage = "https://github.com/aritra741/AgentCheck"
 Repository = "https://github.com/aritra741/AgentCheck"
 
 [tool.setuptools.packages.find]
-include = ["agentcheck*", "pipeline*", "dashboard*"]
+include = ["agentcheck*", "pipeline*", "dashboard*", "experiments*"]

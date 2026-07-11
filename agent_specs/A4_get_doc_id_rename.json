@@ -8,7 +8,7 @@
     "tools": [
       {
         "tool_id": "get_doc",
-        "description": "Retrieves the full text of a document from the internal knowledge base. Parameter: doc_id (string, required) \u2014 the unique identifier of the document. Returns an object with doc_id, title, and full text.",
+        "description": "Retrieves the full text of a document from the internal knowledge base. Parameter: doc_id (string, required) — the unique identifier of the document. Returns an object with doc_id, title, and full text.",
         "input_format": {},
         "output_format": {
           "doc_id": "string",
@@ -45,10 +45,5 @@
     "tool_id": "get_doc",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": {
-    "origin": "self_generated",
-    "source_id": "self_A4_get_doc_id_rename",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  "endpoint_allowlist": []
 }

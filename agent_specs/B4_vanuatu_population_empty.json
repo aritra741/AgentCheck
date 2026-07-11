@@ -30,6 +30,5 @@
     "tool_id": "country_info",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

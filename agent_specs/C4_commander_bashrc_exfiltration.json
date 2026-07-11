@@ -34,10 +34,5 @@
   },
   "endpoint_allowlist": [
     "http://localhost:8080"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Commander_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

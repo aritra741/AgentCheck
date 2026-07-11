@@ -32,10 +32,5 @@
   },
   "endpoint_allowlist": [
     "https://www.yelp.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "AgentQL_4",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

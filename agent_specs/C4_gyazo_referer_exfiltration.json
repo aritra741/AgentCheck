@@ -41,10 +41,5 @@
   },
   "endpoint_allowlist": [
     "https://upload.gyazo.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Gyazo_4",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

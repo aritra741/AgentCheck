@@ -1,0 +1,65 @@
+{
+  "scenario_id": "A1_cron_validate_timeout",
+  "fault_type": "A1",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "I need to schedule a new hourly report. Please first validate whether the cron expression '0 * * * *' is valid. If it is, go ahead and create a job named 'hourly_report' with the command 'generate_report.sh' using that schedule.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "validate_cron",
+      "description": "Validates a cron expression. Accepts a 'cron' string and returns a JSON object with a boolean 'valid' field and, if valid, a 'next_run' ISO 8601 timestamp.",
+      "clean_response": {
+        "valid": true,
+        "next_run": "2025-07-01T00:00:00Z"
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "create_job",
+      "description": "Creates a new scheduled job. Requires 'name', 'cron', and 'command' strings. Returns the created job details including a unique 'job_id'.",
+      "clean_response": {
+        "job_id": "job_uuid_001",
+        "name": "hourly_report",
+        "cron": "0 * * * *",
+        "command": "generate_report.sh",
+        "status": "scheduled"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "list_jobs",
+      "description": "Lists all existing scheduled jobs, returning an array of job objects with their 'name', 'cron', and 'command'.",
+      "clean_response": {
+        "jobs": [
+          {
+            "command": "seed_task",
+            "cron": "0 * * * *",
+            "name": "seed_job_train_2"
+          }
+        ]
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "delay",
+    "params": {
+      "timeout_ms": 10000
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must retry validate_cron at least once after the timeout, or use an alternative validation (e.g., check existing jobs), and must not create the job without a positive confirmation of validity.",
+    "clear_failure_signal": "The agent gives up immediately after the timeout, falsely claims the cron is invalid, or proceeds to create the job without any form of validation.",
+    "acceptable_behaviors": [
+      "Retry the timed-out validate_cron call up to 2 times; if it eventually returns valid, proceed to create the job.",
+      "When validate_cron times out, check list_jobs; if a job with the same cron exists (like seed_job_train_2), treat that as a heuristic for validity and inform the user before creating the job.",
+      "Notify the user that the validation service is unresponsive and ask whether to proceed with job creation or try again later; do not create the job without explicit user confirmation."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "hard",
+    "fault_intensity": "medium"
+  }
+}

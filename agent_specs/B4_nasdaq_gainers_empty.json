@@ -33,6 +33,5 @@
     "tool_id": "get_nasdaq_top_gainers",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

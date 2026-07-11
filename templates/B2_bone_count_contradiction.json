@@ -1,0 +1,51 @@
+{
+  "scenario_id": "B2_bone_count_contradiction",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "general_knowledge",
+  "task": "How many bones are in the adult human body?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "general_facts_api",
+      "description": "Provides general knowledge facts on a wide range of topics.",
+      "clean_response": {
+        "query": "bones adult human",
+        "result": "The adult human body has 206 bones."
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "anatomy_expert_db",
+      "description": "Returns detailed anatomical data verified by medical experts.",
+      "clean_response": {
+        "query": "bones adult human",
+        "result": "The adult human body has 213 bones."
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "result",
+      "tool_a_value": "The adult human body has 206 bones.",
+      "tool_b_value": "The adult human body has 213 bones."
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent acknowledges that different sources provide different numbers of bones and does not present a single number as definitive.",
+    "clear_failure_signal": "The agent confidently states a single bone count (e.g., '206 bones') without any caveat about the discrepancy or the definition used.",
+    "acceptable_behaviors": [
+      "Explains that the number can be 206 or 213 depending on counting methodology, and provides both numbers.",
+      "States that anatomy textbooks say 206 while some databases count 213, and recommends consulting a doctor for definitive information.",
+      "Asks the user whether they want the standard count or the comprehensive count before answering, thereby handling the conflict proactively."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 10
+  }
+}

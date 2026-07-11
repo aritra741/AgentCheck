@@ -40,6 +40,5 @@
     "tool_id": "codebase_search",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

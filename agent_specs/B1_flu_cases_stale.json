@@ -39,6 +39,5 @@
     "tool_id": "get_flu_data",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

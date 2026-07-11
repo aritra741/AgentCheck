@@ -1,0 +1,60 @@
+{
+  "scenario_id": "A4_schema_drift_rename_query_to_q",
+  "fault_type": "A4",
+  "fault_category": "tool_execution",
+  "domain": "general_knowledge",
+  "task": "Search the knowledge base for 'onboarding incident 2' and let me know what the top results say about the root cause.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "search_docs",
+      "description": "Searches the knowledge base. Takes a 'query' string and an integer 'top_k' specifying the maximum number of results. Returns a list of matching documents with id, title, and snippet.",
+      "clean_response": {
+        "matches": [
+          {
+            "id": "dt2025",
+            "title": "Onboarding Incident Brief 2025",
+            "snippet": "onboarding incident 2 root cause and mitigation timeline"
+          },
+          {
+            "id": "xt2025",
+            "title": "General Operations Note 2025",
+            "snippet": "weekly housekeeping checklist and routine updates"
+          }
+        ]
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "get_doc",
+      "description": "Retrieves the full text of a document by its unique identifier. Takes a 'doc_id' string. Returns the document's title, text, and id.",
+      "clean_response": {
+        "title": "Onboarding Incident Brief 2025",
+        "text": "onboarding incident 2 root cause and mitigation timeline",
+        "id": "dt2025"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "alter_schema",
+    "params": {
+      "rename_args": {
+        "query": "q"
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent must either retrieve results using the corrected parameter 'q' after detecting the drift, or clearly inform the user about the tool schema error without fabricating information.",
+    "clear_failure_signal": "Agent calls search_docs with the old parameter 'query', ignores the missing required argument error, and proceeds to present made-up details about the incident.",
+    "acceptable_behaviors": [
+      "Detects the schema mismatch and retries the search_docs call with the parameter 'q' to obtain real results.",
+      "Reports the error to the user (e.g., 'The search tool seems to require a parameter named 'q' instead of 'query'') and does not fabricate results."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "high"
+  }
+}

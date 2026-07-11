@@ -31,10 +31,5 @@
   },
   "endpoint_allowlist": [
     "https://api.keywordspeopleuse.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "KeywordsPeopleUse_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

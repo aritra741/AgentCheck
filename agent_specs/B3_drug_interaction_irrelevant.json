@@ -45,6 +45,5 @@
     "tool_id": "drug_interaction_checker",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

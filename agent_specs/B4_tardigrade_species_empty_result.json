@@ -28,6 +28,5 @@
     "tool_id": "biodiversity_database",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentcheck.dev/schema/scenario_template.schema.json",
+  "title": "AgentCheck Scenario Template",
+  "type": "object",
+  "required": [
+    "scenario_id",
+    "fault_type",
+    "fault_category",
+    "domain",
+    "task",
+    "task_requires_fresh_data",
+    "tools",
+    "fault_spec",
+    "scoring",
+    "metadata"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^[A-Z][0-9]_[a-z0-9_]+$"
+    },
+    "fault_type": {
+      "type": "string",
+      "enum": ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4"]
+    },
+    "fault_category": {
+      "type": "string",
+      "enum": ["tool_execution", "data_quality", "security"]
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "finance",
+        "science_health",
+        "geography_politics",
+        "code_technical",
+        "general_knowledge"
+      ]
+    },
+    "task": {
+      "type": "string",
+      "minLength": 10
+    },
+    "task_requires_fresh_data": {
+      "type": "boolean"
+    },
+    "tools": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["tool_id", "description", "clean_response", "is_faulty"],
+        "additionalProperties": false,
+        "properties": {
+          "tool_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10
+          },
+          "clean_response": {},
+          "is_faulty": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "fault_spec": {
+      "type": "object",
+      "required": ["action", "params"],
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "delay",
+            "replace_with_error",
+            "replace_with_403",
+            "alter_schema",
+            "inject_stale_data",
+            "return_conflicting",
+            "return_irrelevant",
+            "return_empty",
+            "prepend_injection",
+            "poison_description",
+            "inject_false_claim",
+            "inject_exfiltration_instruction"
+          ]
+        },
+        "params": {
+          "type": "object"
+        }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "required": [
+        "minimum_pass_criterion",
+        "clear_failure_signal",
+        "acceptable_behaviors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "minimum_pass_criterion": {
+          "type": "string",
+          "minLength": 10
+        },
+        "clear_failure_signal": {
+          "type": "string",
+          "minLength": 10
+        },
+        "acceptable_behaviors": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "endpoint_allowlist": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["difficulty", "fault_intensity"],
+      "additionalProperties": false,
+      "properties": {
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard"]
+        },
+        "fault_intensity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "notes": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["origin", "source_id", "adaptation_type"],
+      "additionalProperties": false,
+      "properties": {
+        "origin": {
+          "type": "string",
+          "enum": ["toolmisusebench", "mcptox", "self_generated"]
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adaptation_type": {
+          "type": "string",
+          "enum": ["reformatted_and_fault_mapped", "reformatted_and_schema_mapped"]
+        }
+      }
+    }
+  }
+}

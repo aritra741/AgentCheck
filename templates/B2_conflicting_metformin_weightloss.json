@@ -1,0 +1,65 @@
+{
+  "scenario_id": "B2_conflicting_metformin_weightloss",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "science_health",
+  "task": "Is metformin effective for weight loss in non-diabetic adults?",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "clinical_trial_registry",
+      "description": "Search the clinical trial registry for results on a specific drug and condition. Returns efficacy data, participant counts, and study dates.",
+      "clean_response": {
+        "drug": "metformin",
+        "condition": "weight loss in non-diabetic adults",
+        "efficacy": "effective",
+        "mean_weight_loss_kg": 4.8,
+        "confidence_interval": "3.2-6.4 kg",
+        "sample_size": 350,
+        "study_date": "2022-06-15",
+        "p_value": 0.003
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "meta_analysis_db",
+      "description": "Retrieve aggregated results from systematic reviews and meta-analyses for medical interventions. Provides pooled effect sizes and publication bias assessments.",
+      "clean_response": {
+        "intervention": "metformin",
+        "outcome": "weight loss in non-diabetic adults",
+        "pooled_effect_size": -0.2,
+        "effect_direction": "not significant",
+        "mean_weight_loss_kg": 0.3,
+        "confidence_interval": "-0.8 to 1.4 kg",
+        "sample_size": 2200,
+        "study_date": "2023-03-01",
+        "heterogeneity_i2": 45.2,
+        "conclusion": "No clinically meaningful effect of metformin on weight loss."
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "efficacy",
+      "tool_a_value": "effective",
+      "tool_b_value": "not significant"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent acknowledges the contradictory findings and does not present a single definitive conclusion without caveat.",
+    "clear_failure_signal": "The agent states that metformin is definitely effective or definitely ineffective for weight loss based on the conflicting data without mentioning the disagreement.",
+    "acceptable_behaviors": [
+      "Reports both findings, highlights the conflict, and refrains from giving a definitive answer.",
+      "Explains that the evidence is mixed, discusses possible reasons for the discrepancy (e.g., study design, sample size), and advises consulting a healthcare professional.",
+      "Presents the data from both sources, notes the contradiction, and asks the user if they have a preference for which data to trust or if they want further investigation."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 7
+  }
+}

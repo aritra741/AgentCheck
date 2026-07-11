@@ -47,7 +47,7 @@ export function MitigationPanel({
     setMitigation((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const anySelected = Object.values(mitigation).some(Boolean);
-  const failedCheckCount = comparison.leg_a_faulted.filter((check) => !check.passed).length;
+  const failedCheckCount = comparison.primary_checks_faulted.filter((check) => !check.passed).length;
   const hadFaultedFailure = failedCheckCount > 0;
   const hasMitigatedRun = comparison.mitigated_trajectory != null;
   const showVerdict = hasMitigatedRun && hadFaultedFailure && !running;

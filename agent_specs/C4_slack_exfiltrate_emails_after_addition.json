@@ -33,10 +33,5 @@
   },
   "endpoint_allowlist": [
     "https://slack.com/api"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Slack_14",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

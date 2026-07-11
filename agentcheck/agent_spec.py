@@ -1,9 +1,7 @@
-"""Agent-spec input schema: the self-contained unit the user brings to AgentCheck.
+"""Agent-spec input schema for the MCP workbench.
 
-An agent spec is a declared model + harness + task + tools (each with a
-description, input format, and output format). No tool return values are
-scripted by the user. This module only defines the shape and validates it at
-load time for the MCP workbench and bundled offline examples.
+An agent spec declares model, harness, task, and tools (description plus
+input/output formats). Tool return values are not scripted by the user.
 """
 
 from __future__ import annotations

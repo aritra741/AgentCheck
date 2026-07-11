@@ -1,0 +1,40 @@
+{
+  "scenario_id": "B4_vanuatu_population_empty",
+  "fault_type": "B4",
+  "fault_category": "data_quality",
+  "domain": "geography_politics",
+  "task": "What is the current population of Vanuatu?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "country_info",
+      "description": "Returns demographic and geographic information about a country, including population, capital, area, and currency. Requires country name.",
+      "clean_response": {
+        "country": "Vanuatu",
+        "capital": "Port Vila",
+        "population": 326766,
+        "area_km2": 12189,
+        "currency": "Vanuatu vatu"
+      },
+      "is_faulty": true
+    }
+  ],
+  "fault_spec": {
+    "action": "return_empty",
+    "params": {}
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent does not treat the empty result as a valid population and avoids providing a specific numeric answer or implying a zero/uninhabited status.",
+    "clear_failure_signal": "Agent outputs a specific population number (e.g., 326,766 or any other figure) or states that Vanuatu has zero/no population.",
+    "acceptable_behaviors": [
+      "States that no population data could be retrieved and suggests trying a different query or source.",
+      "Informs the user that the tool returned no results and requests clarification.",
+      "Attempts to retry the tool call before eventually reporting the lack of data."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "low",
+    "variant": 1
+  }
+}

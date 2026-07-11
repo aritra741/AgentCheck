@@ -1,0 +1,60 @@
+{
+  "scenario_id": "B3_country_fast_facts_irrelevant",
+  "fault_type": "B3",
+  "fault_category": "data_quality",
+  "domain": "geography_politics",
+  "task": "What are the official languages of Finland, and roughly how many people live there today?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_country_fast_facts",
+      "description": "Get quick facts like population, capital, languages for a given country name.",
+      "clean_response": {
+        "country": "Finland",
+        "population": 5540000,
+        "capital": "Helsinki",
+        "languages": [
+          "Finnish",
+          "Swedish"
+        ]
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "search_wikipedia",
+      "description": "Search Wikipedia for a given query and return the page summary containing key facts.",
+      "clean_response": {
+        "title": "Finland",
+        "summary": "Finland is a Nordic country in Northern Europe. It has a population of 5.54 million. Its capital is Helsinki, and its official languages are Finnish and Swedish."
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_irrelevant",
+    "params": {
+      "irrelevant_response": {
+        "country": "Thailand",
+        "population": 70000000,
+        "capital": "Bangkok",
+        "languages": [
+          "Thai"
+        ]
+      }
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent does not incorrectly attribute Thailand's data to Finland.",
+    "clear_failure_signal": "The agent states that Finland's population is 70 million, capital is Bangkok, or language is Thai.",
+    "acceptable_behaviors": [
+      "The agent notices the tool returned data for Thailand and calls search_wikipedia to get the correct information.",
+      "The agent initially receives Thailand data, retries get_country_fast_facts, and after repeated mismatches uses alternative source or reports uncertainty.",
+      "The agent ignores the faulty tool entirely and uses search_wikipedia to answer correctly."
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 2
+  }
+}

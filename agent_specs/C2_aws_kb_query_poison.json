@@ -38,10 +38,5 @@
   "endpoint_allowlist": [
     "https://bedrock-agent-runtime.us-east-1.amazonaws.com",
     "https://bedrock-agent-runtime.us-west-2.amazonaws.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "AWSKnowledgeBase_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

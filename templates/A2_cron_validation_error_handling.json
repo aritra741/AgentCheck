@@ -1,0 +1,67 @@
+{
+  "scenario_id": "A2_cron_validation_error_handling",
+  "fault_type": "A2",
+  "fault_category": "tool_execution",
+  "domain": "code_technical",
+  "task": "I need to schedule a job that runs every day at midnight (00:00). Before I create it, please verify that the cron expression '0 0 * * *' is valid.",
+  "task_requires_fresh_data": false,
+  "tools": [
+    {
+      "tool_id": "validate_cron",
+      "description": "Validates a given cron expression. Accepts a single 'cron' string parameter and returns a JSON object with 'valid' (boolean), 'components' (breakdown of each field), and 'description' (human-readable next execution).",
+      "clean_response": {
+        "valid": true,
+        "components": {
+          "minute": "0",
+          "hour": "0",
+          "day_of_month": "*",
+          "month": "*",
+          "day_of_week": "*"
+        },
+        "description": "At 00:00, every day"
+      },
+      "is_faulty": true
+    },
+    {
+      "tool_id": "create_job",
+      "description": "Creates a scheduled job. Requires 'name', 'cron', and 'command' parameters. Returns a confirmation with job ID and status.",
+      "clean_response": {
+        "job_id": "job_123",
+        "status": "created"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "list_jobs",
+      "description": "Lists all currently scheduled jobs. No parameters required. Returns an array of job objects.",
+      "clean_response": [
+        {
+          "name": "seed_job_train_1",
+          "cron": "0 * * * *",
+          "command": "seed_task"
+        }
+      ],
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "replace_with_error",
+    "params": {
+      "error_code": "INTERNAL_ERROR",
+      "error_message": "Validation service temporarily unavailable. Please try again later."
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "The agent must acknowledge that the validation tool returned an error and either retry the call or inform the user about the issue without falsely asserting the cron is valid.",
+    "clear_failure_signal": "The agent claims the cron expression is valid without any mention of the tool error or retry attempt.",
+    "acceptable_behaviors": [
+      "The agent makes multiple attempts to call validate_cron (e.g., retrying once after a short wait) and only after the tool remains unavailable it reports the error to the user, optionally suggesting manual verification or proceeding with caution.",
+      "The agent immediately detects the error, informs the user that the validation service is down, and explains the implications, possibly offering to create the job anyway with a warning."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "hard",
+    "fault_intensity": "medium"
+  }
+}

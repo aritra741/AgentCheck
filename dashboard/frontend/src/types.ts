@@ -39,13 +39,13 @@ export interface TrajectoryStepDef {
   data: Record<string, unknown>;
 }
 
-export interface LegACheckResultDef {
+export interface PrimaryCheckResultDef {
   check_id: string;
   description: string;
   passed: boolean;
 }
 
-export interface LegBResultDef {
+export interface DiagnosticLabelsDef {
   failure_detected: boolean;
   recovery_action: string;
   uncertainty_communicated: boolean;
@@ -74,10 +74,10 @@ export interface ComparisonResponse {
   mitigated_trajectory: TrajectoryStepDef[] | null;
   mitigated_final_answer?: string | null;
   divergence: DivergenceDef;
-  leg_a_faulted: LegACheckResultDef[];
-  leg_b_faulted: LegBResultDef | null;
-  leg_a_mitigated: LegACheckResultDef[] | null;
-  leg_b_mitigated: LegBResultDef | null;
+  primary_checks_faulted: PrimaryCheckResultDef[];
+  diagnostics_faulted: DiagnosticLabelsDef | null;
+  primary_checks_mitigated: PrimaryCheckResultDef[] | null;
+  diagnostics_mitigated: DiagnosticLabelsDef | null;
   fix_confirmed: boolean | null;
   clean_run_error?: string | null;
   faulted_run_error?: string | null;

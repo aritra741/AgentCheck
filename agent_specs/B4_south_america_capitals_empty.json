@@ -31,6 +31,5 @@
     "tool_id": "get_capitals_by_region",
     "occurrence": 1
   },
-  "endpoint_allowlist": [],
-  "source": null
+  "endpoint_allowlist": []
 }

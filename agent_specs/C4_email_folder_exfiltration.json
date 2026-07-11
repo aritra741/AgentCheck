@@ -34,10 +34,5 @@
   },
   "endpoint_allowlist": [
     "https://mail.example.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Email_38",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

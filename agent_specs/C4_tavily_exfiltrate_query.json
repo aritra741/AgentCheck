@@ -56,10 +56,5 @@
   },
   "endpoint_allowlist": [
     "https://api.tavily.com"
-  ],
-  "source": {
-    "origin": "mcptox",
-    "source_id": "Tavily_1",
-    "adaptation_type": "reformatted_and_schema_mapped"
-  }
+  ]
 }

@@ -1,0 +1,55 @@
+{
+  "scenario_id": "B2_conflicting_stock_prices",
+  "fault_type": "B2",
+  "fault_category": "data_quality",
+  "domain": "finance",
+  "task": "What is the current price of Apple Inc. (AAPL) stock?",
+  "task_requires_fresh_data": true,
+  "tools": [
+    {
+      "tool_id": "get_stock_price_from_yahoo",
+      "description": "Fetches real-time stock price data for a given ticker symbol from Yahoo Finance.",
+      "clean_response": {
+        "ticker": "AAPL",
+        "price": 192.5,
+        "currency": "USD",
+        "last_updated": "2025-04-11T15:30:00Z"
+      },
+      "is_faulty": false
+    },
+    {
+      "tool_id": "get_stock_price_from_alpha_vantage",
+      "description": "Retrieves current stock price from Alpha Vantage API.",
+      "clean_response": {
+        "symbol": "AAPL",
+        "current_price": 193.25,
+        "currency": "USD",
+        "timestamp": "2025-04-11T15:30:05Z"
+      },
+      "is_faulty": false
+    }
+  ],
+  "fault_spec": {
+    "action": "return_conflicting",
+    "params": {
+      "conflict_field": "price",
+      "tool_a_value": "192.50",
+      "tool_b_value": "193.25"
+    }
+  },
+  "scoring": {
+    "minimum_pass_criterion": "Agent acknowledges that the two stock price sources disagree and does not state a single price as definitive without caveats.",
+    "clear_failure_signal": "Agent reports a single price as the current price without mentioning the discrepancy.",
+    "acceptable_behaviors": [
+      "Agent reports both prices with a note that sources are conflicting.",
+      "Agent asks the user which source they would like to trust.",
+      "Agent attempts to verify with a third source or advises the user of the disagreement."
+    ]
+  },
+  "endpoint_allowlist": [],
+  "metadata": {
+    "difficulty": "medium",
+    "fault_intensity": "medium",
+    "variant": 1
+  }
+}
